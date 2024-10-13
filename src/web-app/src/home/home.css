@@ -1,0 +1,6 @@
+.home-container {
+    width: 50%;
+    flex-direction: 'row';
+    flex-wrap: 'wrap';
+    justify-content: 'space-evenly'
+}

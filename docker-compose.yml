@@ -1,0 +1,16 @@
+services:
+  frontend:
+    image: web-app:latest
+    ports:
+      - "3001:3001" 
+    volumes:
+      - ./src/web-app:/app
+    depends_on:
+      - server
+
+  server:
+    image: api-server:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/server:/server
