@@ -3,7 +3,9 @@ import AuthButton from './auth/auth';
 import React, { useEffect, useState } from 'react';
 import { Routes } from 'react-router-dom';
 import Home from './home/home';
+import NavMain from './components/nav-main';
 import Cookies from 'js-cookie';
+import './tailwind.css';
 
 
 function App() {
@@ -16,6 +18,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <NavMain />
         <h3>
           Strava Interval Analyzer
         </h3>
@@ -25,9 +28,7 @@ function App() {
           // </MyContext.Provider>
         ) : (
           <div>
-            <AuthButton>
-              Click to authorize
-            </AuthButton>
+            <AuthButton />
           </div>
         )}
 

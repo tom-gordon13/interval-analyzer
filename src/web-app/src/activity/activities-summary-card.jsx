@@ -82,8 +82,9 @@ const ActivitiesSummaryCard = ({
             {activities.length ? (<div>Number of Activities: {activities.length}</div>) : ''}
             <div class='activity-types-container'>
                 {activityObj && activities.length ?
-                    Object.keys(activityObj).map((activityType) => (
+                    Object.keys(activityObj).map((activityType, index) => (
                         <ActivityTypeSummary
+                            key={`${activityType}-${index}`}
                             class='activity-type'
                             activityType={activityType}
                             activitySet={activityObj[activityType]} />

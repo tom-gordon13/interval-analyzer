@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Button } from '@mui/material';
 
 const serverPort = 3000;
 
@@ -9,12 +10,10 @@ const AuthButton = () => {
     const [environmentVariables, setEnvironmentVariables] = useState({});
 
     const handleConnectToStrava = () => {
-
         const apiEndpoint = `http://localhost:${serverPort}/api/environment`
         axios.get(apiEndpoint)
             .then((response) => {
                 const receivedVariables = response.data;
-
                 // Store the received variables in the component state
                 setEnvironmentVariables(receivedVariables);
 
@@ -31,7 +30,7 @@ const AuthButton = () => {
                 axios.get('/api/get-access-token')
                     .then((response) => {
                         const accessToken = response.data.accessToken;
-
+                        getUserInfo(accessToken)
                         Cookies.set('stravaAccessToken', accessToken, { expires: 0.25 });
                         const storedToken = Cookies.get('stravaAccessToken');
                         console.log(`Cookie stored - ${storedToken}`)
@@ -46,11 +45,23 @@ const AuthButton = () => {
             });
     };
 
+    const getUserInfo = async (accessToken) => {
+        try {
+            const response = await axios.get('https://www.strava.com/api/v3/athlete', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            console.log('User Information:', response.data);
+        } catch (error) {
+            console.error('Error fetching user information:', error.response ? error.response.data : error.message);
+        }
+    };
+
 
     return (
-        <div>
-            <button onClick={handleConnectToStrava}>Click to authenticate with Strava</button>
-        </div>
+        <Button variant='contained' onClick={handleConnectToStrava}>Click to authenticate with Strava</Button>
     );
 };
 
