@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-import jsonData from '../test-data/test-activity-cycling.json';
-
-
+import jsonData from '../../test-data/test-activity-cycling.json';
 
 function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx = 1) {
     const result = [];
@@ -32,7 +30,7 @@ const LapChart = ({ lapData, selectedLaps, activity }) => {
     const lapDataFull = []
 
     for (const lap in selectedLaps) {
-        const match = lap.match(/\d+$/); // Matches one or more digits at the end of the string
+        const match = lap.match(/\d+$/);
 
         const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
 
@@ -64,7 +62,7 @@ const LapChart = ({ lapData, selectedLaps, activity }) => {
             .domain([0, d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts))])
             .range([height, 0]);
 
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10); // d3.schemeCategory10 is an array of 10 colors
+        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
         const lineGenerator = d3.line()
             .x(d => xScale(d.time))
             .y(d => yScale(d.watts));
@@ -89,17 +87,13 @@ const LapChart = ({ lapData, selectedLaps, activity }) => {
         const paths = svg.selectAll('path')
             .data(lapDataFull, ds => ds.name)
 
-
-
-        // Enter pattern: Append a new path for each new data item
         paths.enter().append('path')
             .attr('fill', 'none')
             .attr('stroke', ds => colorScale(ds.name))
             .attr('stroke-width', 1.5)
             .attr('d', ds => lineGenerator(ds.values))
-            .attr('class', 'line'); // Add a class for easy selection if needed
+            .attr('class', 'line');
 
-        // Exit pattern: Remove paths that no longer have corresponding data
         paths.exit().remove();
         // paths.selectAll().remove()
 

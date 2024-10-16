@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { getCookie } from '../utils/browser-helpers';
-import { fetchActivityDetails } from '../utils/fetch-activity-details';
+import { getCookie } from '../../utils/browser-helpers';
+import { fetchActivityDetails } from '../../utils/fetch-activity-details';
 
 const token = getCookie('stravaAccessToken')
 const supportedActivityTypes = ['Ride', 'VirtualRide']
@@ -10,7 +10,6 @@ export const ActivitiesDropdown = ({
     activities,
     selectedActivity,
     setSelectedActivity,
-    showActivityDialog,
     setShowActivityDialog
 }) => {
 
@@ -25,19 +24,14 @@ export const ActivitiesDropdown = ({
     };
 
     return (
-        <FormControl style={{
-            margin: '1rem',
-        }}>
+        <FormControl className='w-full m-1'>
             <InputLabel id="activity-select-label">Select Activity</InputLabel>
             <Select
                 labelId="activity-select-label"
                 id="activity-select"
                 value={selectedActivity}
                 onChange={handleChange}
-                style={{
-                    color: 'white',
-                    backgroundColor: 'white'
-                }}
+                className='bg-white'
             >
                 {activities.map((activity, index) => (
                     <MenuItem key={index} value={activity}>

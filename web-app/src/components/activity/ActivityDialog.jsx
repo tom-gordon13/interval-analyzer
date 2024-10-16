@@ -4,21 +4,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import ActivityChart from './activity-chart'
-import LapChart from './lap-chart'
+import ActivityChart from './ActivityChart'
+import LapChart from './LapChart'
 
-// Test
-import jsonData from '../test-data/test-activity-cycling.json';
-
-
+import jsonData from '../../test-data/test-activity-cycling.json';
 
 export const ActivityDialog = ({ open, onClose, activity }) => {
     const { name, distance, type } = activity;
-
-    const [fullActivity, setFullActivity] = useState(null)
     const [selectedLaps, setSelectedLaps] = useState({})
-    const [avgWatts, setAvgWatts] = useState(null)
-
 
     const data = activity.laps.map((lap, index) => ({
         category: `Lap ${index + 1}`,
@@ -38,7 +31,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
             }}
             PaperProps={{
                 sx: {
-                    minWidth: '1000px', // Set your desired minimum width
+                    minWidth: '1000px',
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'center',

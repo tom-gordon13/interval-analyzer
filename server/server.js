@@ -7,6 +7,7 @@ const querystring = require('querystring');
 dotenv.config({ path: './.env' }); // Load environment variables from .env file
 
 const app = express();
+app.use(express.json());
 
 // Enable CORS for all routes
 app.use(cors());
