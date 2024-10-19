@@ -50,7 +50,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
                 <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} />
+                <LapChart selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} lapData={data} activity={activity} />
 
             </DialogContent>
             <DialogActions>

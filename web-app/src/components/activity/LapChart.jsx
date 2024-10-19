@@ -1,54 +1,50 @@
 import React, { useEffect, useRef } from 'react';
+import { Button } from '@mui/material';
 import * as d3 from 'd3';
-
-import jsonData from '../../test-data/test-activity-cycling.json';
 
 function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx = 1) {
     const result = [];
-    let movingAvgSum = 0
+    let movingAvgSum = 0;
     for (let i = 0; i < numOfValues; i++) {
         const time = i;
         let watts;
-        if (i < movingAvgIdx - 1 || movingAvgIdx == 1) {
+        if (i < movingAvgIdx - 1 || movingAvgIdx === 1) {
             watts = valuesArray[startIndex + i];
-            movingAvgSum = movingAvgSum + valuesArray[startIndex + i]
+            movingAvgSum += valuesArray[startIndex + i];
         } else {
-            movingAvgSum = movingAvgSum - valuesArray[startIndex + i - movingAvgIdx - 1] + valuesArray[startIndex + i]
-            watts = movingAvgSum / movingAvgIdx
+            movingAvgSum = movingAvgSum - valuesArray[startIndex + i - movingAvgIdx - 1] + valuesArray[startIndex + i];
+            watts = movingAvgSum / movingAvgIdx;
         }
 
         result.push({ time, watts });
     }
-    console.log(result)
     return result;
 }
 
-d3.select('svg').selectAll('*').remove();
-
-const LapChart = ({ lapData, selectedLaps, activity }) => {
-
-    const lapDataFull = []
-
-    for (const lap in selectedLaps) {
-        const match = lap.match(/\d+$/);
-
-        const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
-
-        const lapObj = {
-            name: lap,
-            values: generateDataPoints(activity.streams[0].data, activity.laps[lapIndex].start_index, (activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index))
-        }
-        lapDataFull.push(lapObj)
-    }
-
+const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
     const ref = useRef(null);
 
     useEffect(() => {
+        if (!selectedLaps || Object.keys(selectedLaps).length === 0) return;
 
-        console.log(lapDataFull)
+        const lapDataFull = [];
+        for (const lap in selectedLaps) {
+            const match = lap.match(/\d+$/);
+            const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
 
-        // if (!lapDataFull) return;
-        if (!lapDataFull || lapDataFull.length === 0) return;
+            const lapObj = {
+                name: lap,
+                values: generateDataPoints(
+                    activity.streams[0].data,
+                    activity.laps[lapIndex].start_index,
+                    activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index
+                )
+            };
+            lapDataFull.push(lapObj);
+        }
+
+        if (lapDataFull.length === 0) return;
+
         const svgWidth = 600, svgHeight = 400;
         const margin = { top: 20, right: 20, bottom: 30, left: 20 };
         const width = svgWidth - margin.left - margin.right;
@@ -67,74 +63,48 @@ const LapChart = ({ lapData, selectedLaps, activity }) => {
             .x(d => xScale(d.time))
             .y(d => yScale(d.watts));
 
-
-
         const svg = d3.select(ref.current)
             .attr('width', svgWidth)
-            .attr('height', svgHeight)
-            .append('g')
+            .attr('height', svgHeight);
+
+        // Clear previous lines and legends
+        svg.selectAll('*').remove();
+
+        const g = svg.append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
-        // const xAxis = d3.axisBottom(xScale);
-        // const yAxis = d3.axisLeft(yScale);
-        // svg.append('g')
-        //     .attr('transform', `translate(0,${height})`)
-        //     .call(xAxis);
 
-        // svg.append('g')
-        //     .call(yAxis);
-        svg.selectAll("*").remove()
-        console.log(lapDataFull)
-        const paths = svg.selectAll('path')
-            .data(lapDataFull, ds => ds.name)
+        const paths = g.selectAll('.line')
+            .data(lapDataFull, ds => ds.name);
 
+        // Enter phase (add new lines)
         paths.enter().append('path')
+            .attr('class', 'line')
             .attr('fill', 'none')
             .attr('stroke', ds => colorScale(ds.name))
             .attr('stroke-width', 1.5)
-            .attr('d', ds => lineGenerator(ds.values))
-            .attr('class', 'line');
+            .attr('d', ds => lineGenerator(ds.values));
 
+        // Exit phase (remove old lines)
         paths.exit().remove();
-        // paths.selectAll().remove()
 
+        // Add Y-Axis
+        const yAxis = d3.axisLeft(yScale)
+            .ticks(d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts)) / 50) // Generate ticks at intervals of 50
+            .tickSize(-width); // Extend ticks across the width for grid lines
 
+        // Append the y-axis to the chart
+        g.append('g')
+            .call(yAxis)
+            .selectAll('line') // Add gridlines
+            .attr('stroke', '#ccc')
+            .attr('stroke-dasharray', '2,2'); // Optional: style for gridlines
 
-
-
-
-
-
-        // // lapDataFull.forEach(ds => {
-        // //     svg.append('path')
-        // //         .datum(ds.values)
-        // //         .attr('fill', 'none')
-        // //         .attr('stroke', () => colorScale(ds.name)) // Use the dataset name to get a color
-        // //         .attr('stroke-width', 1.5)
-        // //         .attr('d', lineGenerator);
-        // // });
-        // const validData = lapDataFull.filter(ds => ds && ds.hasOwnProperty('name'));
-        // console.log('valid - ', validData)
-        // const testData = [
-        //     { 'name': 'Tom', 'values': [1, 2, 3] }
-        // ]
-        // const paths = svg.selectAll('path')
-        //     .data(lapDataFull, ds => ds.name);
-        // console.log('here')
-
-        // paths.enter().append('path')
-        //     .attr('fill', 'none')
-        //     .attr('stroke', ds => colorScale(ds.name))
-        //     .attr('stroke-width', 1.5)
-        //     .attr('d', ds => lineGenerator(ds.values))
-        //     .attr('class', 'line');
-
-        // paths.exit().remove();
-
-        const legend = svg.selectAll(".legend")
+        // Re-append legends after removing previous ones
+        const legend = g.selectAll(".legend")
             .data(lapDataFull.map(ds => ds.name))
             .enter().append("g")
             .attr("class", "legend")
-            .attr("transform", (d, i) => `translate(0, ${i * 20})`); // Vertical layout of legend items
+            .attr("transform", (d, i) => `translate(0, ${i * 20})`);
 
         legend.append("rect")
             .attr("x", width - 18)
@@ -149,12 +119,14 @@ const LapChart = ({ lapData, selectedLaps, activity }) => {
             .style("text-anchor", "end")
             .text(d => d);
 
-    }, [lapDataFull]);
+    }, [selectedLaps, activity]);
 
-    return <svg ref={ref}></svg>;
+    return (
+        <>
+            <Button variant='contained' onClick={() => setSelectedLaps({})}>Clear Laps</Button>
+            {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref}></svg> : null}
+        </>
+    );
 };
 
 export default LapChart;
-
-
-
