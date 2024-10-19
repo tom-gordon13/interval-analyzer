@@ -38,12 +38,13 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 }
             }}
         >
-            <DialogTitle>Activity Details</DialogTitle>
-            <DialogContent>
+            <DialogTitle>Activity Details
                 <p><strong>Name:</strong> {name}</p>
                 <p><strong>Distance:</strong> {distance}</p>
                 <p><strong>Type:</strong> {type}</p>
                 <p><strong>Date:</strong> {activity.start_date_local.slice(0, 10)}</p>
+            </DialogTitle>
+            <DialogContent>
                 <br />
                 {Object.keys(selectedLaps).length > 0 ? (<p>Number of Selected Laps: {Object.keys(selectedLaps).length}</p>) : null}
                 <hr />
@@ -54,7 +55,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">
+                <Button onClick={onClose} color="primary" variant='contained'>
                     Close
                 </Button>
             </DialogActions>
