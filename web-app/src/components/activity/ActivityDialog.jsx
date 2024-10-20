@@ -14,6 +14,8 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const { name, distance, type } = activity;
     const [selectedLaps, setSelectedLaps] = useState({})
     const [filterActive, setFilterActive] = useState(false)
+    const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
+    const [minMaxPowerFilter, setMinMaxPowerFilter] = useState([])
 
     const data = activity.laps.map((lap, index) => ({
         category: `Lap ${index + 1}`,
@@ -23,12 +25,25 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }));
 
     useEffect(() => {
-        console.log(filterActive)
+        const minMaxVals = data.reduce(
+            (acc, lap) => {
+                const { value } = lap;
+                return [
+                    Math.min(acc[0], value),
+                    Math.max(acc[1], value)
+                ];
+            },
+            [Infinity, -Infinity]
+        );
+        setMinMaxPowerRange(minMaxVals)
+    }, [])
+
+    useEffect(() => {
         if (!filterActive) {
             setSelectedLaps({})
             return
         }
-        const testArray = data.filter((lap) => lap.value > 350 && lap.value < 450).reduce((acc, lap) => {
+        const testArray = data.filter((lap) => lap.value > minMaxPowerFilter[0] - 1 && lap.value < minMaxPowerFilter[1] + 1).reduce((acc, lap) => {
             acc[lap.category] = lap.value;
             return acc;
         }, {});
@@ -65,7 +80,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                     <Button variant='contained' className='m-20' onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
                     <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
                     <br />
-                    <ActivitiesFilter title='Power Range (watts)' property='' minValue={50} maxValue={200} />
+                    <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
                 </div>
             </DialogTitle>
             <DialogContent>

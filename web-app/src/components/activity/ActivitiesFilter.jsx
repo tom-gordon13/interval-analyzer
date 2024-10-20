@@ -3,11 +3,12 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import React, { useState } from 'react';
 
-const ActivitiesFilter = ({ title, property, minValue, maxValue }) => {
+const ActivitiesFilter = ({ title, property, minValue, maxValue, setMinMaxFilter }) => {
     const [sliderValue, setSliderValue] = useState([minValue, maxValue])
 
     const handleChange = (event, newValue) => {
         setSliderValue(newValue)
+        setMinMaxFilter(newValue)
     }
 
     // handleInputChange updates the corresponding slider value when the input is changed
@@ -20,10 +21,10 @@ const ActivitiesFilter = ({ title, property, minValue, maxValue }) => {
     // handleBlur makes sure the value is within the slider's range when the input loses focus
     const handleBlur = (index) => () => {
         const newValues = [...sliderValue];
-        if (newValues[index] < 5) {
-            newValues[index] = 5;
-        } else if (newValues[index] > 200) {
-            newValues[index] = 200;
+        if (newValues[index] < minValue) {
+            newValues[index] = minValue;
+        } else if (newValues[index] > maxValue) {
+            newValues[index] = maxValue;
         }
         setSliderValue(newValues);
     };
@@ -32,13 +33,11 @@ const ActivitiesFilter = ({ title, property, minValue, maxValue }) => {
         <div>
             <h3>{title}</h3>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                {/* Input for the lower value */}
                 <TextField
                     label="Min"
                     value={sliderValue[0]}
                     onChange={handleInputChange(0)}
                     onBlur={handleBlur(0)}
-                    // className='w-20 h-20'
                     inputProps={{
                         step: 1,
                         min: minValue,
@@ -56,7 +55,6 @@ const ActivitiesFilter = ({ title, property, minValue, maxValue }) => {
                     valueLabelDisplay="auto"
                     min={minValue}
                     max={maxValue}
-                // getAriaValueText={valuetext}
                 />
                 <TextField
                     label="Max"
