@@ -31,7 +31,7 @@ const ActivitiesFilter = ({ title, property, minValue, maxValue, setMinMaxFilter
 
     return (
         <div>
-            <h3>{title}</h3>
+            <h3 className='mb-2 text-center'>{title}</h3>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <TextField
                     label="Min"

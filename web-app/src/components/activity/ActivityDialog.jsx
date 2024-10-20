@@ -77,7 +77,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 <p><strong>Date:</strong> {activity.start_date_local.slice(0, 10)}</p>
                 <hr />
                 <div className='flex flex-col p-2 justify-between' sx={{ width: '100%' }}>
-                    <Button variant='contained' className='m-20' onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
+                    <Button variant='contained' sx={{ marginBottom: '0.5rem' }} onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
                     <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
