@@ -27,7 +27,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
     useEffect(() => {
         if (!selectedLaps || Object.keys(selectedLaps).length === 0) return;
 
-        const lapDataFull = [];
+        let lapDataFull = [];
         for (const lap in selectedLaps) {
             const match = lap.match(/\d+$/);
             const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
@@ -123,7 +123,6 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
 
     return (
         <>
-            <Button variant='contained' onClick={() => setSelectedLaps({})}>Clear Laps</Button>
             {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref}></svg> : null}
         </>
     );

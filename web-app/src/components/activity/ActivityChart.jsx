@@ -56,9 +56,7 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
                 setSelectedLaps(currentSelectedLaps => {
                     if (lapName in currentSelectedLaps) {
                         const updated = { ...selectedLaps };
-                        console.log(updated)
                         delete updated[[d.category]];
-                        console.log(updated)
                         return updated;
                     } else {
                         return {
