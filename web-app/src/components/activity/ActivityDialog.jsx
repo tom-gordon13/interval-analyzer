@@ -10,12 +10,12 @@ import ActivitiesFilter from './ActivitiesFilter'
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
-export const ActivityDialog = ({ open, onClose, activity }) => {
-    const { name, distance, type } = activity;
+export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) => {
     const [selectedLaps, setSelectedLaps] = useState({})
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
     const [minMaxPowerFilter, setMinMaxPowerFilter] = useState([])
+    const { name, distance, type } = activity;
 
     const data = activity.laps.map((lap, index) => ({
         category: `Lap ${index + 1}`,
@@ -36,7 +36,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
             [Infinity, -Infinity]
         );
         setMinMaxPowerRange(minMaxVals)
-    }, [])
+    }, [selectedActivity])
 
     useEffect(() => {
         if (!filterActive) {

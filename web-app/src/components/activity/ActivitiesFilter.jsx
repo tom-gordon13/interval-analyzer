@@ -1,10 +1,14 @@
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ActivitiesFilter = ({ title, property, minValue, maxValue, setMinMaxFilter }) => {
     const [sliderValue, setSliderValue] = useState([minValue, maxValue])
+
+    useEffect(() => {
+        setSliderValue([minValue, maxValue])
+    }, [minValue, maxValue])
 
     const handleChange = (event, newValue) => {
         setSliderValue(newValue)

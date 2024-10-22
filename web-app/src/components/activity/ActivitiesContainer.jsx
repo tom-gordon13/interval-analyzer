@@ -79,6 +79,7 @@ export const ActivitiesContainer = ({
                 open={showActivityDialog}
                 onClose={handleClose}
                 activity={selectedActivity}
+                selectedActivity={selectedActivity}
             />) : null}
         </div>
     )
