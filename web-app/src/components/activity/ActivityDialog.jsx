@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
+import ActivityRadioButtons from './ActivityRadioButtons'
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
@@ -12,7 +12,11 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
     const [minMaxPowerFilter, setMinMaxPowerFilter] = useState([])
+    const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const { name, distance, type } = activity;
+
+    const powerRadioValues = [1, 3, 5, 10]
+    const powerRadioLabels = ['1 second', '3 seconds', '5 seconds', '10 seconds']
 
     const data = activity.laps.map((lap, index) => ({
         category: `Lap ${index + 1}`,
@@ -91,6 +95,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
+                    <ActivityRadioButtons values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
                 </div>
             </DialogTitle>
             <DialogContent>
@@ -100,7 +105,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
 
                 <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} lapData={data} activity={activity} />
+                <LapChart selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} />
 
             </DialogContent>
         </Dialog>

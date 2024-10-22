@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Button } from '@mui/material';
 import * as d3 from 'd3';
 
-function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx = 1) {
+function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx) {
     const result = [];
     let movingAvgSum = 0;
     for (let i = 0; i < numOfValues; i++) {
@@ -21,7 +21,7 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx =
     return result;
 }
 
-const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
+const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) => {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -37,7 +37,8 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
                 values: generateDataPoints(
                     activity.streams[0].data,
                     activity.laps[lapIndex].start_index,
-                    activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index
+                    activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index,
+                    Number(powerMovingAvg)
                 )
             };
             lapDataFull.push(lapObj);
@@ -119,7 +120,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
             .style("text-anchor", "end")
             .text(d => d);
 
-    }, [selectedLaps, activity]);
+    }, [selectedLaps, activity, powerMovingAvg]);
 
     return (
         <>
