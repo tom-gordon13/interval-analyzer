@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
+// import CloseIcon from '@mui/icons-material/Close';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
@@ -75,7 +76,6 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
-                    variant='contained'
                     sx={{
                         position: 'absolute',
                         right: 8,
@@ -95,7 +95,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
-                    <ActivityRadioButtons values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
+                    <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
                 </div>
             </DialogTitle>
             <DialogContent>

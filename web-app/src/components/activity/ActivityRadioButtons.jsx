@@ -11,7 +11,7 @@ const ActivityRadioButtons = ({ values, labels, title, setUltimateValue }) => {
 
 
     return (
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" sx={{ marginTop: '2rem' }}>
             <FormLabel component="legend">{title}</FormLabel>
             <RadioGroup
                 aria-label="options"
