@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
+import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
+// import CloseIcon from '@mui/icons-material/Close';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
@@ -36,7 +33,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
             [Infinity, -Infinity]
         );
         setMinMaxPowerRange(minMaxVals)
-    }, [selectedActivity])
+    }, [selectedActivity, selectedLaps])
 
     useEffect(() => {
         if (!filterActive) {
@@ -71,6 +68,19 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
             }}
         >
             <DialogTitle sx={{ width: '35%' }}>Activity Details
+                <IconButton
+                    aria-label="close"
+                    onClick={onClose}
+                    variant='contained'
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    X
+                </IconButton>
                 <p><strong>Name:</strong> {name}</p>
                 <p><strong>Distance:</strong> {distance}</p>
                 <p><strong>Type:</strong> {type}</p>
@@ -93,11 +103,6 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                 <LapChart selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} lapData={data} activity={activity} />
 
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary" variant='contained'>
-                    Close
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 };

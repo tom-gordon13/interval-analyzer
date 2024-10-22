@@ -9,7 +9,7 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
     const ref = useRef();
 
     useEffect(() => {
-        const svgWidth = 600, svgHeight = 400;
+        const svgWidth = 800, svgHeight = 400;
         const margin = { top: 20, right: 20, bottom: 30, left: 40 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;

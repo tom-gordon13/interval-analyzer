@@ -45,7 +45,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
 
         if (lapDataFull.length === 0) return;
 
-        const svgWidth = 600, svgHeight = 400;
+        const svgWidth = 800, svgHeight = 400;
         const margin = { top: 20, right: 20, bottom: 30, left: 20 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
@@ -123,7 +123,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity }) => {
 
     return (
         <>
-            {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref}></svg> : null}
+            {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref} className='w-full'></svg> : null}
         </>
     );
 };
