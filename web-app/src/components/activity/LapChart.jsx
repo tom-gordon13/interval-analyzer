@@ -7,20 +7,24 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
     let movingAvgSum = 0;
     const adjustmentValue = adjustment || 0
 
-    for (let time = 0; time < numOfValues; time++) {
-        let currIndex = startIndex + time
-        if (time > 0) currIndex += adjustmentValue
+    for (let timeIndex = 0; timeIndex < numOfValues; timeIndex++) {
+        const currIndex = startIndex + timeIndex + (startIndex > 0 ? adjustmentValue : 0)
         let watts;
-        if (time < movingAvgIdx - 1 || movingAvgIdx === 1) {
+
+        if (movingAvgIdx === 1 || timeIndex === 0) {
             watts = valuesArray[currIndex];
             movingAvgSum += valuesArray[currIndex];
+        } else if (timeIndex < movingAvgIdx) {
+            movingAvgSum += valuesArray[currIndex];
+            watts = movingAvgSum / (timeIndex + 1);
         } else {
-            movingAvgSum = movingAvgSum - valuesArray[currIndex - movingAvgIdx - 1] + valuesArray[currIndex];
+            movingAvgSum = movingAvgSum + valuesArray[currIndex] - valuesArray[currIndex - movingAvgIdx];
             watts = movingAvgSum / movingAvgIdx;
         }
-
-        result.push({ time, watts });
+        console.log(timeIndex, valuesArray[currIndex], valuesArray[currIndex - movingAvgIdx], movingAvgSum, watts)
+        result.push({ timeIndex, watts });
     }
+    console.log(movingAvgIdx, result)
     return result;
 }
 
@@ -58,7 +62,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
         const height = svgHeight - margin.top - margin.bottom;
 
         const xScale = d3.scaleLinear()
-            .domain([d3.min(lapDataFull, ds => d3.min(ds.values, d => d.time)), d3.max(lapDataFull, ds => d3.max(ds.values, d => d.time))])
+            .domain([d3.min(lapDataFull, ds => d3.min(ds.values, d => d.timeIndex)), d3.max(lapDataFull, ds => d3.max(ds.values, d => d.timeIndex))])
             .range([0, width]);
 
         const yScale = d3.scaleLinear()
@@ -67,7 +71,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
 
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
         const lineGenerator = d3.line()
-            .x(d => xScale(d.time))
+            .x(d => xScale(d.timeIndex))
             .y(d => yScale(d.watts));
 
         const svg = d3.select(ref.current)
