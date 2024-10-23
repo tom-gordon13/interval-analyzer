@@ -21,10 +21,8 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
             movingAvgSum = movingAvgSum + valuesArray[currIndex] - valuesArray[currIndex - movingAvgIdx];
             watts = movingAvgSum / movingAvgIdx;
         }
-        console.log(timeIndex, valuesArray[currIndex], valuesArray[currIndex - movingAvgIdx], movingAvgSum, watts)
         result.push({ timeIndex, watts });
     }
-    console.log(movingAvgIdx, result)
     return result;
 }
 
