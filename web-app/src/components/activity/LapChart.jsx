@@ -2,17 +2,20 @@ import React, { useEffect, useRef } from 'react';
 import { Button } from '@mui/material';
 import * as d3 from 'd3';
 
-function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx) {
+function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, adjustment) {
     const result = [];
     let movingAvgSum = 0;
-    for (let i = 0; i < numOfValues; i++) {
-        const time = i;
+    const adjustmentValue = adjustment || 0
+
+    for (let time = 0; time < numOfValues; time++) {
+        let currIndex = startIndex + time
+        if (time > 0) currIndex += adjustmentValue
         let watts;
-        if (i < movingAvgIdx - 1 || movingAvgIdx === 1) {
-            watts = valuesArray[startIndex + i];
-            movingAvgSum += valuesArray[startIndex + i];
+        if (time < movingAvgIdx - 1 || movingAvgIdx === 1) {
+            watts = valuesArray[currIndex];
+            movingAvgSum += valuesArray[currIndex];
         } else {
-            movingAvgSum = movingAvgSum - valuesArray[startIndex + i - movingAvgIdx - 1] + valuesArray[startIndex + i];
+            movingAvgSum = movingAvgSum - valuesArray[currIndex - movingAvgIdx - 1] + valuesArray[currIndex];
             watts = movingAvgSum / movingAvgIdx;
         }
 
@@ -28,6 +31,8 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
         if (!selectedLaps || Object.keys(selectedLaps).length === 0) return;
 
         let lapDataFull = [];
+        let adjustmentValue = activity.laps[0].elapsed_time - activity.laps[0].end_index
+
         for (const lap in selectedLaps) {
             const match = lap.match(/\d+$/);
             const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
@@ -35,10 +40,11 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
             const lapObj = {
                 name: lap,
                 values: generateDataPoints(
-                    activity.streams[0].data,
+                    activity.streams.find(item => item.type === 'watts').data,
                     activity.laps[lapIndex].start_index,
                     activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index,
-                    Number(powerMovingAvg)
+                    Number(powerMovingAvg),
+                    adjustmentValue
                 )
             };
             lapDataFull.push(lapObj);
