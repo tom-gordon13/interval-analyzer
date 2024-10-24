@@ -3,10 +3,10 @@ import AuthButton from '../services/auth';
 
 import { ActivitiesContainer } from '../components/activity/ActivitiesContainer'
 
-function Home({ hasToken }) {
+function Home({ hasToken, user }) {
     return (
         <div>
-            {hasToken ? (
+            {user ? (
                 <div className="flex flex-row flex-wrap justify-evenly" >
                     <ActivitiesContainer />
                 </div>

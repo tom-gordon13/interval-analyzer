@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home'
 import HandleStravaCallback from './pages/HandleStravaCallback';
 import NavMain from './components/NavMain';
 import Cookies from 'js-cookie';
@@ -15,14 +15,14 @@ function App() {
   useEffect(() => {
     const token = Cookies.get('stravaAccessToken');
     setStravaAccessToken(token || '');
-  }, []);
+  }, [stravaAccessToken]);
 
   return (
     <div className="App pt-0">
       <NavMain user={user} setUser={setUser} />
       <Router>
         <Routes>
-          <Route path="/" element={<Home hasToken={!!stravaAccessToken} setUser={setUser} />} />
+          <Route path="/" element={<Home hasToken={!!stravaAccessToken} setUser={setUser} user={user} />} />
           <Route path="/strava-callback" element={<HandleStravaCallback setUser={setUser} user={user} />} />
         </Routes>
       </Router>
