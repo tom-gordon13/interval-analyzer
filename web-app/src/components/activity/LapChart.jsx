@@ -34,6 +34,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
 
         let lapDataFull = [];
         let adjustmentValue = activity.laps[0].elapsed_time - activity.laps[0].end_index
+        let maxLapLength = 0
 
         for (const lap in selectedLaps) {
             const match = lap.match(/\d+$/);
@@ -49,6 +50,7 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
                     adjustmentValue
                 )
             };
+            maxLapLength = Math.max(maxLapLength, activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index)
             lapDataFull.push(lapObj);
         }
 
@@ -107,6 +109,16 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
             .selectAll('line') // Add gridlines
             .attr('stroke', '#ccc')
             .attr('stroke-dasharray', '2,2'); // Optional: style for gridlines
+
+        const xAxis = d3.axisBottom(xScale)
+            .ticks((d3.max(lapDataFull, ds => d3.max(ds.values, d => d.timeIndex)) - d3.min(lapDataFull, ds => d3.min(ds.values, d => d.timeIndex))) / (maxLapLength / 20))
+            .tickFormat(d => `${d}`);  // Format the ticks as seconds
+
+        // Append the x-axis to the chart
+        g.append('g')
+            .attr('transform', `translate(0, ${height})`)  // Position it at the bottom
+            .call(xAxis);
+
 
         // Re-append legends after removing previous ones
         const legend = g.selectAll(".legend")
