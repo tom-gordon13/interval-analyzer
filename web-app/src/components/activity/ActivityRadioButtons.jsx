@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RadioGroup, FormControlLabel, Radio, FormLabel, FormControl } from '@mui/material';
+import { RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, Grid } from '@mui/material';
 
 const ActivityRadioButtons = ({ values, labels, title, setUltimateValue }) => {
     const [selectedValue, setSelectedValue] = useState('1');
@@ -19,11 +19,15 @@ const ActivityRadioButtons = ({ values, labels, title, setUltimateValue }) => {
                 value={selectedValue}
                 onChange={handleChange}
             >
-                {values.map((value, idx) =>
-                (
-                    <FormControlLabel value={value} control={<Radio />} label={labels[idx]} />
-                )
-                )}
+                <Grid container spacing={2}>
+                    {values.map((value, idx) =>
+                    (
+                        <Grid item xs={3} key={value} sx={{ padding: 0 }}>
+                            <FormControlLabel value={value} control={<Radio />} label={labels[idx]} />
+                        </Grid>
+                    )
+                    )}
+                </Grid>
             </RadioGroup>
         </FormControl>
     );

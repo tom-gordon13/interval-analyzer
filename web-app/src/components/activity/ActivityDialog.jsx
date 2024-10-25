@@ -17,7 +17,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const { name, distance, type } = activity;
 
     const powerRadioValues = [1, 3, 5, 10]
-    const powerRadioLabels = ['1 second', '3 seconds', '5 seconds', '10 seconds']
+    const powerRadioLabels = ['1 sec', '3 sec', '5 sec', '10 sec']
 
     const data = activity.laps.map((lap, index) => ({
         category: `Lap ${index + 1}`,
@@ -96,6 +96,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
                     <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
+                    {/* <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} /> */}
                 </div>
             </DialogTitle>
             <DialogContent>
