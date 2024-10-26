@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Button } from '@mui/material';
 import * as d3 from 'd3';
 
 function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, adjustment) {
@@ -26,7 +25,7 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
     return result;
 }
 
-const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) => {
+const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) => {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -53,8 +52,12 @@ const LapChart = ({ selectedLaps, setSelectedLaps, activity, powerMovingAvg }) =
             maxLapLength = Math.max(maxLapLength, activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index)
             lapDataFull.push(lapObj);
         }
+        setFullLapStream(lapDataFull.flatMap((lap) => lap.values.map(value => value.watts)))
 
-        if (lapDataFull.length === 0) return;
+        if (lapDataFull.length === 0) {
+            setFullLapStream([])
+            return;
+        }
 
         const svgWidth = 800, svgHeight = 400;
         const margin = { top: 20, right: 20, bottom: 30, left: 20 };

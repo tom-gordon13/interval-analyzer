@@ -5,6 +5,7 @@ import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
 import ActivityRadioButtons from './ActivityRadioButtons'
+import LapPowerBuckets from './LapPowerBuckets'
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
@@ -13,8 +14,11 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
     const [minMaxPowerFilter, setMinMaxPowerFilter] = useState([])
+    const [powerBuckets, setPowerBuckets] = useState([])
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
+    const [fullLapStream, setFullLapStream] = useState([])
     const { name, distance, type } = activity;
+
 
     const powerRadioValues = [1, 3, 5, 10]
     const powerRadioLabels = ['1 sec', '3 sec', '5 sec', '10 sec']
@@ -38,6 +42,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
             [Infinity, -Infinity]
         );
         setMinMaxPowerRange(minMaxVals)
+        if (!powerBuckets.length) setPowerBuckets(minMaxVals)
     }, [selectedActivity, selectedLaps])
 
     useEffect(() => {
@@ -96,7 +101,11 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
                     <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
-                    {/* <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} /> */}
+                    {selectedLaps && Object.keys(selectedLaps).length ? (
+                        <><LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} /> <ActivitiesFilter title='Power Buckets' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setPowerBuckets} /> </>
+                    )
+                        : null}
+
                 </div>
             </DialogTitle>
             <DialogContent>
@@ -106,7 +115,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
 
                 <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} />
+                <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} />
 
             </DialogContent>
         </Dialog>

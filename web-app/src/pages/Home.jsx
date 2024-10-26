@@ -6,7 +6,7 @@ import { ActivitiesContainer } from '../components/activity/ActivitiesContainer'
 function Home({ hasToken, user }) {
     return (
         <div>
-            {user ? (
+            {hasToken || user ? (
                 <div className="flex flex-row flex-wrap justify-evenly" >
                     <ActivitiesContainer />
                 </div>
