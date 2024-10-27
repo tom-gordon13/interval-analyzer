@@ -102,7 +102,10 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
                     <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
                     {selectedLaps && Object.keys(selectedLaps).length ? (
-                        <><LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} /> <ActivitiesFilter title='Power Buckets' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setPowerBuckets} /> </>
+                        <>
+                            <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} />
+                            <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={500} setMinMaxFilter={setPowerBuckets} />
+                        </>
                     )
                         : null}
 

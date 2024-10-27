@@ -3,7 +3,7 @@ import '../../styles/activity-chart.css'
 import * as d3 from 'd3';
 
 import jsonData from '../../test-data/test-activity-cycling.json';
-
+const selectedLapColor = 'blue'
 
 const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
     const ref = useRef();
@@ -49,8 +49,10 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
             .attr("y", d => y(d.value))
             .attr("width", d => d.dynamicWidthValue)
             .attr("height", d => height - y(d.value))
-            // .attr("fill", d => d.value > 200 ? 'tomato' : 'steelblue')
-            .attr("fill", d => colorScale(d.value))
+            .attr("fill", d => {
+                return d.category in selectedLaps ? selectedLapColor : colorScale(d.value);
+            })
+            // .attr("fill", d => colorScale(d.value))
             .on("click", (event, d) => {
                 const lapName = d.category
                 setSelectedLaps(currentSelectedLaps => {
@@ -82,8 +84,10 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
                     .duration(500)
                     .style("opacity", 0);
                 d3.select(this)
-                    .attr("fill", d => colorScale(d.value))
-            });
+                    .attr("fill", d => {
+                        return d.category in selectedLaps ? selectedLapColor : colorScale(d.value);
+                    });
+            })
 
         svg.append("g")
             .attr("transform", `translate(0,${height})`)
