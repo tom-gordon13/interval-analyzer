@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home'
 import HandleStravaCallback from './pages/HandleStravaCallback';
+import ActivityPage from './pages/ActivityPage';
 import NavMain from './components/NavMain';
 import Cookies from 'js-cookie';
 import './styles/tailwind.css';
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home hasToken={!!stravaAccessToken} setUser={setUser} user={user} />} />
           <Route path="/strava-callback" element={<HandleStravaCallback setUser={setUser} user={user} />} />
+          <Route path="/activity/:activityId" element={<ActivityPage stravaAccessToken={stravaAccessToken} />} />
         </Routes>
       </Router>
     </div >

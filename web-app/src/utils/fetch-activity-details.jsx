@@ -13,7 +13,6 @@ export const fetchActivityDetails = async (accessToken, activity) => {
         const activityDetails = await response.json();
         activityDetails.streams = await fetchActivityStreams(accessToken, activity.id)
         activityDetails.zones = await fetchActivityZones(accessToken, activity.id)
-        console.log(activityDetails)
         return activityDetails;
     } catch (error) {
         console.error('Error fetching activity details:', error);

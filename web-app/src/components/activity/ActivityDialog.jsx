@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
@@ -18,6 +17,9 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const [fullLapStream, setFullLapStream] = useState([])
     const { name, distance, type } = activity;
+
+    console.log('activity', activity)
+    console.log('selectedActivity', selectedActivity)
 
 
     const powerRadioValues = [1, 3, 5, 10]
@@ -104,7 +106,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                     {selectedLaps && Object.keys(selectedLaps).length ? (
                         <>
                             <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} />
-                            <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={500} setMinMaxFilter={setPowerBuckets} />
+                            <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={800} setMinMaxFilter={setPowerBuckets} />
                         </>
                     )
                         : null}
