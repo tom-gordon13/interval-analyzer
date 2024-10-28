@@ -50,7 +50,7 @@ const ActivityPage = ({ stravaAccessToken }) => {
     if (loading) return <p>Loading...</p>;
     // if (error) return <p>Error: {error}</p>;
     if (!stravaAccessToken) navigate('/')
-    if (!selectedActivity) return <p>No activity found.</p>;
+    if (!selectedActivity && !loading) return <p>No activity found.</p>;
 
     return (
         <div>
