@@ -5,6 +5,8 @@ import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
 import ActivityRadioButtons from './ActivityRadioButtons'
 import LapPowerBuckets from './LapPowerBuckets'
+import { updateActivityDetails } from '../../services/update-activity'
+import { getCookie } from '../../utils/browser-helpers';
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
@@ -18,9 +20,21 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const [fullLapStream, setFullLapStream] = useState([])
     const { name, distance, type } = activity;
 
-    console.log('activity', activity)
-    console.log('selectedActivity', selectedActivity)
+    // useEffect(() => {
+    //     /// API call to update activity details
+    //     if (activity) {
+    //         const accessToken = getCookie('stravaAccessToken')
+    //         const activityId = activity.id;
+    //         const updates = {
+    //             name: 'Luuunch Ride',
+    //             description: ''
+    //         };
 
+    //         updateActivityDetails(activityId, updates, accessToken)
+    //             .then((updatedActivity) => console.log('Updated activity:', updatedActivity))
+    //             .catch((error) => console.error('Failed to update activity:', error));
+    //     }
+    // }, [])
 
     const powerRadioValues = [1, 3, 5, 10]
     const powerRadioLabels = ['1 sec', '3 sec', '5 sec', '10 sec']

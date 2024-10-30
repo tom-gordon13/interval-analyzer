@@ -20,7 +20,7 @@ const AuthButton = () => {
                 const redirect_uri = receivedVariables.STRAVA_REDIRECT_URI;
 
                 // Authorization URL for Strava OAuth
-                const authorization_url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&scope=read,activity:read_all`;
+                const authorization_url = `https://www.strava.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&scope=read,activity:read_all,activity:write`;
 
                 window.location.href = authorization_url;
             })

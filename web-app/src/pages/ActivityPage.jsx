@@ -5,7 +5,6 @@ import { ActivityDialog } from '../components/activity/ActivityDialog';
 
 
 const ActivityPage = ({ stravaAccessToken }) => {
-    console.log('ActivityPage', stravaAccessToken)
     const { activityId } = useParams();
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [loading, setLoading] = useState(true);

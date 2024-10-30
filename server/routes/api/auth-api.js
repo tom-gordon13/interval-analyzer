@@ -2,6 +2,8 @@ const express = require('express');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const getActivityDetails = require('../../middleware/fetch-activity')
+const fetchActivityDetails = require('../../middleware/fetch-activity-plus')
 
 const app = express();
 const router = express.Router();
@@ -9,6 +11,7 @@ const router = express.Router();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+
 
 router.get('/api/environment', (req, res) => {
     const environmentVariables = {

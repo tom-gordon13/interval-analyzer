@@ -22,7 +22,13 @@ app.use(cors(corsOptions));
 // Serve your React application (assuming it's in a 'build' directory)
 app.use(express.static('build'));
 
-const routes = require('../server/routes/api/auth-api'); // Adjust the path as needed
+// const routes = require('../server/routes/api/auth-api');
+// // const routes = require('../server/routes/api/activity/activity');
+// app.use('/', routes);
+
+const routes = require('./routes/api'); // This will import from /routes/index.js
+// Use the routes with a prefix like /api (optional)
+// app.use('/api', routes);
 app.use('/', routes);
 
 // Start the server on a specific port
