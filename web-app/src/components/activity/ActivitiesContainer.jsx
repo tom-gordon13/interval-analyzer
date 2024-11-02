@@ -80,6 +80,7 @@ export const ActivitiesContainer = ({
                 onClose={handleClose}
                 activity={selectedActivity}
                 selectedActivity={selectedActivity}
+                setSelectedActivity={setSelectedActivity}
             />) : null}
         </div>
     )

@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const axios = require('axios')
 const querystring = require('querystring');
+const mongoose = require('mongoose')
 
 dotenv.config({ path: './.env' }); // Load environment variables from .env file
 
@@ -18,6 +19,21 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URL, {
+            dbName: process.env.MONGO_DB_NAME,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        console.log(`Connected to ${process.env.MONGO_DB_NAME} database`);
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+    }
+};
+
+connectDB();
 
 // Serve your React application (assuming it's in a 'build' directory)
 app.use(express.static('build'));

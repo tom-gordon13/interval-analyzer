@@ -10,7 +10,7 @@ import { getCookie } from '../../utils/browser-helpers';
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
-export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) => {
+export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setSelectedActivity }) => {
     const [selectedLaps, setSelectedLaps] = useState({})
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
@@ -20,21 +20,34 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
     const [fullLapStream, setFullLapStream] = useState([])
     const { name, distance, type } = activity;
 
-    // useEffect(() => {
-    //     /// API call to update activity details
-    //     if (activity) {
-    //         const accessToken = getCookie('stravaAccessToken')
-    //         const activityId = activity.id;
-    //         const updates = {
-    //             name: 'Luuunch Ride',
-    //             description: ''
-    //         };
+    const updateActivity = () => {
+        if (activity) {
+            console.log(activity)
 
-    //         updateActivityDetails(activityId, updates, accessToken)
-    //             .then((updatedActivity) => console.log('Updated activity:', updatedActivity))
-    //             .catch((error) => console.error('Failed to update activity:', error));
-    //     }
-    // }, [])
+            const newLaps = activity.laps.map((lap, index) => {
+                if (index === 1) {
+                    // Modify only the second lap
+                    return { ...lap, average_watts: 400 };
+                }
+                // Return the original lap for all other items
+                return lap;
+            });
+            const newActivity = {
+                ...activity,
+                laps: newLaps
+            }
+
+            const accessToken = getCookie('stravaAccessToken')
+            const activityId = activity.id;
+            const updates = {
+                laps: newLaps
+            };
+
+            updateActivityDetails(activityId, updates, accessToken)
+                .then((updatedActivity) => console.log('Updated activity:', updatedActivity))
+                .catch((error) => console.error('Failed to update activity:', error));
+        }
+    }
 
     const powerRadioValues = [1, 3, 5, 10]
     const powerRadioLabels = ['1 sec', '3 sec', '5 sec', '10 sec']
@@ -113,6 +126,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity }) =>
                 <hr />
                 <div className='flex flex-col p-2 justify-between' sx={{ width: '100%' }}>
                     <Button variant='contained' sx={{ marginBottom: '0.5rem' }} onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
+                    <Button onClick={updateActivity}>Update Activity</Button>
                     <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
                     <br />
                     <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
