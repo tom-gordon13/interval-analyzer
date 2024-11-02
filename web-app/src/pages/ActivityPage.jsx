@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ActivityDialog } from '../components/activity/ActivityDialog';
 
 
-const ActivityPage = ({ stravaAccessToken }) => {
+const ActivityPage = ({ stravaAccessToken, user }) => {
     const { activityId } = useParams();
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -58,6 +58,7 @@ const ActivityPage = ({ stravaAccessToken }) => {
                 onClose={handleClose}
                 activity={selectedActivity}
                 selectedActivity={selectedActivity}
+                user={user}
             />
         </div>
     );

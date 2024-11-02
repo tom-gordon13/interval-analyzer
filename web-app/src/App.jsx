@@ -28,7 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home hasToken={!!stravaAccessToken} setUser={setUser} user={user} />} />
           <Route path="/strava-callback" element={<HandleStravaCallback setUser={setUser} user={user} />} />
-          <Route path="/activity/:activityId" element={<ActivityPage stravaAccessToken={stravaAccessToken} />} />
+          <Route path="/activity/:activityId" element={<ActivityPage stravaAccessToken={stravaAccessToken} user={user} />} />
         </Routes>
       </Router>
     </div >

@@ -51,9 +51,16 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setS
     }
 
     useEffect(() => {
-        console.log(user)
-        // upsertActivityBasic(user.id, )
-    }, [])
+        if (!selectedActivity) return
+        const activityData = {
+            id: selectedActivity.id,
+            name: selectedActivity.name,
+            sport_type: selectedActivity.sport_type,
+            activity_date: selectedActivity.start_date
+        }
+        const accessToken = getCookie('stravaAccessToken')
+        upsertActivityBasic(user.id, activityData, accessToken)
+    }, [selectedActivity])
 
     const powerRadioValues = [1, 3, 5, 10]
     const powerRadioLabels = ['1 sec', '3 sec', '5 sec', '10 sec']

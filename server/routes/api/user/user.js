@@ -16,9 +16,26 @@ router.get('/:userId/activity-basic', (req, res) => {
 
 });
 
-router.post('/:userId/activity-basic/:actvityId', (req, res) => {
-    const activity = new ActivityBasic(req.body);
-    console.log(activity)
+router.post('/:userId/activity-basic/:actvityId', async (req, res) => {
+
+    try {
+        // const user = new User(req.body);
+        const activity = new ActivityBasic(req.body);
+        // let result = await user.save();
+        const result = await activity.save()
+        result = result.toObject();
+        if (result) {
+            // delete result.password;
+            resp.send(req.body);
+            console.log(result);
+        } else {
+            console.log("No result provided");
+        }
+
+    } catch (e) {
+        console.log(e)
+        // resp.send("Something Went Wrong");
+    }
 });
 
 module.exports = router;
