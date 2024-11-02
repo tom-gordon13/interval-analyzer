@@ -41,7 +41,9 @@ const HandleStravaCallback = ({ setUser, user }) => {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-            setUser(response.data)
+            const userData = response.data;
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
         } catch (error) {
             console.error('Error fetching user information:', error.response ? error.response.data : error.message);
         }

@@ -17,7 +17,7 @@ const axiosStrava = axios.create({
 });
 
 export const ActivitiesContainer = ({
-
+    user
 }) => {
     const [activities, setActivities] = useState({});
     const [activityObj, setActivityObj] = useState({});
@@ -81,6 +81,7 @@ export const ActivitiesContainer = ({
                 activity={selectedActivity}
                 selectedActivity={selectedActivity}
                 setSelectedActivity={setSelectedActivity}
+                user={user}
             />) : null}
         </div>
     )

@@ -5,6 +5,7 @@ function NavMain({ user, setUser }) {
     const handleSignOut = () => {
         setUser(null)
         document.cookie = 'stravaAccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        localStorage.removeItem('user');
         window.location.href = '/';
     }
 

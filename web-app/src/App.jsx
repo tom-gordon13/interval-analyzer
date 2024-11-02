@@ -11,7 +11,10 @@ import './styles/tailwind.css';
 
 function App() {
   const [stravaAccessToken, setStravaAccessToken] = useState('');
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   useEffect(() => {
     const token = Cookies.get('stravaAccessToken');
