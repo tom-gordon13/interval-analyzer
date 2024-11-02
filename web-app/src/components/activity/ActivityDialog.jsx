@@ -20,6 +20,9 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setS
     const [fullLapStream, setFullLapStream] = useState([])
     const { name, distance, type } = activity;
 
+    console.log(activity)
+    console.log(selectedActivity)
+
     const updateActivity = () => {
         if (activity) {
             console.log(activity)
