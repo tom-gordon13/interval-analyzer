@@ -53,7 +53,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setS
     useEffect(() => {
         if (!selectedActivity) return
         const activityData = {
-            id: selectedActivity.id,
+            activity_id: selectedActivity.id,
             name: selectedActivity.name,
             sport_type: selectedActivity.sport_type,
             activity_date: selectedActivity.start_date

@@ -16,25 +16,26 @@ router.get('/:userId/activity-basic', (req, res) => {
 
 });
 
-router.post('/:userId/activity-basic/:actvityId', async (req, res) => {
-
+router.put('/:userId/activity-basic/:activityId', async (req, res) => {
     try {
-        // const user = new User(req.body);
-        const activity = new ActivityBasic(req.body);
-        // let result = await user.save();
-        const result = await activity.save()
-        result = result.toObject();
-        if (result) {
-            // delete result.password;
-            resp.send(req.body);
-            console.log(result);
-        } else {
-            console.log("No result provided");
-        }
+        // const { userId, activityId } = req.params;
+        const { _id, ...activity } = req.body;
+        activity.most_recent_view = Date.now()
+        const result = await ActivityBasic.findOneAndUpdate(
+            { activity_id: activity.activity_id },
+            activity,
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
 
-    } catch (e) {
-        console.log(e)
-        // resp.send("Something Went Wrong");
+        if (result) {
+            res.status(200).json(result);
+            console.log('Upsert successful:', result);
+        } else {
+            res.status(404).send('No result found or created');
+        }
+    } catch (error) {
+        console.error('Error performing upsert:', error);
+        res.status(500).send('Something went wrong');
     }
 });
 

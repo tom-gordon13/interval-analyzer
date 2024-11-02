@@ -4,7 +4,7 @@ const serverPort = 3000
 
 export const upsertActivityBasic = async (userId, activityData, accessToken) => {
     try {
-        const response = await axios.post(
+        const response = await axios.put(
             `http://localhost:${serverPort}/user/${userId}/activity-basic/${activityData.id}`,
             activityData,
             {
@@ -15,7 +15,7 @@ export const upsertActivityBasic = async (userId, activityData, accessToken) => 
             }
         );
 
-        const data = response.data; // Access the response data
+        const data = response.data;
         console.log('Activity upserted successfully:', data);
         return data;
     } catch (error) {

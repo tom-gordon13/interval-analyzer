@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const ActivityBasicSchema = new mongoose.Schema({
-    id: {
-        type: Number,
+    activity_id: {
+        type: String,
         required: true,
         unique: true
     },
@@ -19,6 +19,11 @@ const ActivityBasicSchema = new mongoose.Schema({
     activity_date: {
         type: Date,
         required: false
+    },
+    most_recent_view: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 });
 
