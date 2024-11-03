@@ -1,6 +1,9 @@
 import { Button } from '@mui/material'
+import React, { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
-function NavMain({ user, setUser }) {
+function NavMain({ }) {
+    const { user, setUser } = useContext(UserContext);
 
     const handleSignOut = () => {
         setUser(null)

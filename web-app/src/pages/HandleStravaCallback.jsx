@@ -1,12 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { UserContext } from '../context/UserContext';
 
 const serverPort = 3000
 
-const HandleStravaCallback = ({ setUser, user }) => {
+const HandleStravaCallback = ({ }) => {
     const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);

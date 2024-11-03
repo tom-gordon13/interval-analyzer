@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { fetchActivity } from '../services/fetch-activity-full';
 import { ActivityDialog } from '../components/activity/ActivityDialog';
+import { UserContext } from '../context/UserContext';
 
 
-const ActivityPage = ({ stravaAccessToken, user }) => {
+const ActivityPage = ({ stravaAccessToken }) => {
     const { activityId } = useParams();
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showActivityDialog, setShowActivityDialog] = useState(false)
+    const { user } = useContext(UserContext);
 
     const navigate = useNavigate();
     const serverPort = 3000
@@ -59,7 +61,6 @@ const ActivityPage = ({ stravaAccessToken, user }) => {
                 onClose={handleClose}
                 activity={selectedActivity}
                 selectedActivity={selectedActivity}
-                user={user}
             />
         </div>
     );

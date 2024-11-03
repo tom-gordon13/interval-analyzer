@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ActivitiesSummaryCard from './ActivitiesSummaryCard';
 import { getCookie } from '../../utils/browser-helpers';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { ActivitiesDropdown } from './ActivitiesDropdown';
 import { ActivityDialog } from './ActivityDialog';
 import { RecentActivities } from './RecentActivities';
 import { fetchActivityBasic } from '../../services/fetch-activity-basic';
+import { UserContext } from '../../context/UserContext';
 
 const today_beg = new Date()
 today_beg.setHours(0, 0, 0, 0);
@@ -19,7 +20,6 @@ const axiosStrava = axios.create({
 });
 
 export const ActivitiesContainer = ({
-    user
 }) => {
     const [activities, setActivities] = useState({});
     const [activityObj, setActivityObj] = useState({});
@@ -29,6 +29,8 @@ export const ActivitiesContainer = ({
     const [recentActivities, setRecentActivities] = useState(null)
     const [showActivityDialog, setShowActivityDialog] = useState(false)
     const [showActivityDropdown, setShowActivityDropdown] = useState(false)
+    const [hasSearchedDates, setHasSearchedDates] = useState(false)
+    const { user } = useContext(UserContext);
 
     const handleClose = () => {
         setShowActivityDialog(false)
@@ -72,6 +74,8 @@ export const ActivitiesContainer = ({
             .catch((error) => {
                 console.error('Error fetching recent activities:', error);
             });
+
+        setHasSearchedDates(true)
     }
 
     return (
@@ -89,7 +93,7 @@ export const ActivitiesContainer = ({
                 selectedActivity={selectedActivity}
                 setSelectedActivity={setSelectedActivity}
                 setShowActivityDialog={setShowActivityDialog}
-            />) : <h5>No activities found - update date range</h5>}
+            />) : <h5>{hasSearchedDates ? 'No activities found - update date range' : null}</h5>}
 
             {selectedActivity ? (<ActivityDialog
                 open={showActivityDialog}
@@ -97,7 +101,6 @@ export const ActivitiesContainer = ({
                 activity={selectedActivity}
                 selectedActivity={selectedActivity}
                 setSelectedActivity={setSelectedActivity}
-                user={user}
             />) : null}
 
             {recentActivities && recentActivities.length ? (<RecentActivities recentActivities={recentActivities} setSelectedActivity={setSelectedActivity} />) : null}

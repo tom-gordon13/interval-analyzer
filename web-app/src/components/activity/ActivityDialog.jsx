@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
@@ -8,10 +8,11 @@ import LapPowerBuckets from './LapPowerBuckets'
 import { updateActivityDetails } from '../../services/update-activity'
 import { upsertActivityBasic } from '../../services/upsert-activity-basic'
 import { getCookie } from '../../utils/browser-helpers';
+import { UserContext } from '../../context/UserContext';
 
 import jsonData from '../../test-data/test-activity-cycling.json';
 
-export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setSelectedActivity, user }) => {
+export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setSelectedActivity }) => {
     const [selectedLaps, setSelectedLaps] = useState({})
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
@@ -19,6 +20,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setS
     const [powerBuckets, setPowerBuckets] = useState([])
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const [fullLapStream, setFullLapStream] = useState([])
+    const { user } = useContext(UserContext);
     const { name, distance, type } = activity;
 
     const updateActivity = () => {
