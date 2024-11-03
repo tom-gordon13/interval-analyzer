@@ -2,12 +2,11 @@ import axios from 'axios';
 
 const serverPort = 3000
 
-export const upsertActivityBasic = async (userId, activityData, accessToken) => {
-    activityData.activity_id = String(activityData.activity_id)
+export const fetchActivityBasic = async (userId, quantity, accessToken) => {
     try {
-        const response = await axios.put(
-            `http://localhost:${serverPort}/user/${userId}/activity-basic/${activityData.id}`,
-            activityData,
+        const response = await axios.get(
+            `http://localhost:${serverPort}/user/${userId}/activity-basic/`,
+            { quantity: quantity },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -17,7 +16,7 @@ export const upsertActivityBasic = async (userId, activityData, accessToken) => 
         );
 
         const data = response.data;
-        console.log('Activity upserted successfully:', data);
+        console.log(`${quantity} activit${quantity > 1 ? 'ies' : 'y'} fetched successfully:`, data);
         return data;
     } catch (error) {
         // Handle errors

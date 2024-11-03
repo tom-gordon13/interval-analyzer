@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { fetchActivity } from '../services/fetch-activity-full';
 import { ActivityDialog } from '../components/activity/ActivityDialog';
 
 

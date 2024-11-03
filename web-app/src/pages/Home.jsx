@@ -4,7 +4,6 @@ import AuthButton from '../services/auth';
 import { ActivitiesContainer } from '../components/activity/ActivitiesContainer'
 
 function Home({ hasToken, user }) {
-    console.log('here', user)
     return (
         <div>
             {hasToken || user ? (

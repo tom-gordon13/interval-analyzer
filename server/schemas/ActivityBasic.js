@@ -6,6 +6,11 @@ const ActivityBasicSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    user_id: {
+        type: String,
+        required: true,
+        unique: false
+    },
     name: {
         type: String,
         required: true,

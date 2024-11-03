@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ActivitiesSummaryCard from './ActivitiesSummaryCard';
 import { getCookie } from '../../utils/browser-helpers';
 import axios from 'axios';
 import { formatActivities } from '../../utils/format-activities';
 import { ActivitiesDropdown } from './ActivitiesDropdown';
 import { ActivityDialog } from './ActivityDialog';
+import { RecentActivities } from './RecentActivities';
+import { fetchActivityBasic } from '../../services/fetch-activity-basic';
 
 const today_beg = new Date()
 today_beg.setHours(0, 0, 0, 0);
@@ -24,12 +26,26 @@ export const ActivitiesContainer = ({
     const [startDate, setStartDate] = useState(today_beg)
     const [endDate, setEndDate] = useState(today_end)
     const [selectedActivity, setSelectedActivity] = useState(null);
+    const [recentActivities, setRecentActivities] = useState(null)
     const [showActivityDialog, setShowActivityDialog] = useState(false)
     const [showActivityDropdown, setShowActivityDropdown] = useState(false)
 
     const handleClose = () => {
         setShowActivityDialog(false)
     }
+
+    useEffect(() => {
+        if (selectedActivity) {
+            setShowActivityDialog(true);
+        }
+    }, [selectedActivity]);
+
+    useEffect(async () => {
+        const recentActivitiesTemp = await fetchActivityBasic(user.id, 3, getCookie('stravaAccessToken'))
+        console.log(recentActivitiesTemp)
+        setRecentActivities(recentActivitiesTemp)
+    }, [])
+
 
     const handleDateChange = (date, pickerType) => {
         if (pickerType === 'start') {
@@ -83,6 +99,8 @@ export const ActivitiesContainer = ({
                 setSelectedActivity={setSelectedActivity}
                 user={user}
             />) : null}
+
+            {recentActivities && recentActivities.length ? (<RecentActivities recentActivities={recentActivities} setSelectedActivity={setSelectedActivity} />) : null}
         </div>
     )
 
