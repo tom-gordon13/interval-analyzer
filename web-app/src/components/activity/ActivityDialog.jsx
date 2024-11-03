@@ -30,10 +30,10 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
             const newLaps = activity.laps.map((lap, index) => {
                 if (index === 1) {
-                    // Modify only the second lap
+
                     return { ...lap, average_watts: 400 };
                 }
-                // Return the original lap for all other items
+
                 return lap;
             });
             const newActivity = {
@@ -161,8 +161,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 <br />
                 {Object.keys(selectedLaps).length > 0 ? (<p>Number of Selected Laps: {Object.keys(selectedLaps).length}</p>) : null}
                 <hr />
-
-                <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} />
+                {selectedActivity.streams.some(stream => stream.type === 'watts') ? <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} /> : <h2 className='flex justify-center items-center h-40'>No power data available</h2>}
                 <br />
                 <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} />
 

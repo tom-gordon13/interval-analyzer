@@ -30,6 +30,7 @@ export const ActivitiesContainer = ({
     const [showActivityDialog, setShowActivityDialog] = useState(false)
     const [showActivityDropdown, setShowActivityDropdown] = useState(false)
     const [hasSearchedDates, setHasSearchedDates] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(UserContext);
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
 
@@ -59,6 +60,7 @@ export const ActivitiesContainer = ({
     };
 
     const handleActivitiesSummaryClick = () => {
+        setIsLoading(true)
         const apiUrl = `/api/v3/athlete/activities?after=${startDate.getTime() / 1000}&before=${endDate.getTime() / 1000}&page=1&per_page=200`;
         const token = getCookie('stravaAccessToken')
         const headers = {
@@ -74,6 +76,8 @@ export const ActivitiesContainer = ({
             })
             .catch((error) => {
                 console.error('Error fetching recent activities:', error);
+            }).finally(() => {
+                setIsLoading(false);
             });
 
         setHasSearchedDates(true)
@@ -92,7 +96,7 @@ export const ActivitiesContainer = ({
             {showActivityDropdown && activities.length ? (<ActivitiesDropdown
                 activities={Object.keys(activities).map(key => activities[key])}
                 setShowActivityDialog={setShowActivityDialog}
-            />) : <h5>{hasSearchedDates ? 'No activities found - update date range' : null}</h5>}
+            />) : <h5>{hasSearchedDates ? (isLoading ? 'Loading activities...' : 'No activities found - update date range') : null}</h5>}
 
             {selectedActivity ? (<ActivityDialog
                 open={showActivityDialog}
