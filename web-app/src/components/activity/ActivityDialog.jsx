@@ -9,10 +9,10 @@ import { updateActivityDetails } from '../../services/update-activity'
 import { upsertActivityBasic } from '../../services/upsert-activity-basic'
 import { getCookie } from '../../utils/browser-helpers';
 import { UserContext } from '../../context/UserContext';
+import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
-import jsonData from '../../test-data/test-activity-cycling.json';
 
-export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setSelectedActivity }) => {
+export const ActivityDialog = ({ open, onClose, activity }) => {
     const [selectedLaps, setSelectedLaps] = useState({})
     const [filterActive, setFilterActive] = useState(false)
     const [minMaxPowerRange, setMinMaxPowerRange] = useState([])
@@ -21,6 +21,7 @@ export const ActivityDialog = ({ open, onClose, activity, selectedActivity, setS
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const [fullLapStream, setFullLapStream] = useState([])
     const { user } = useContext(UserContext);
+    const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
 
     const updateActivity = () => {

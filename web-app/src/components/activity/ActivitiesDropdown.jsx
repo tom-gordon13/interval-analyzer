@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { getCookie } from '../../utils/browser-helpers';
 import { fetchActivityDetails } from '../../utils/fetch-activity-details';
+import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
 const token = getCookie('stravaAccessToken')
 const supportedActivityTypes = ['Ride', 'VirtualRide']
 
 export const ActivitiesDropdown = ({
     activities,
-    selectedActivity,
-    setSelectedActivity,
     setShowActivityDialog
 }) => {
+    const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
 
     const handleChange = async (event) => {
         if (!supportedActivityTypes.includes(event.target.value.type)) {

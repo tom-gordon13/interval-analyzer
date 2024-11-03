@@ -4,15 +4,16 @@ import axios from 'axios';
 import { fetchActivity } from '../services/fetch-activity-full';
 import { ActivityDialog } from '../components/activity/ActivityDialog';
 import { UserContext } from '../context/UserContext';
+import { SelectedActivityContext } from '../context/SelectedActivityContext';
 
 
 const ActivityPage = ({ stravaAccessToken }) => {
     const { activityId } = useParams();
-    const [selectedActivity, setSelectedActivity] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showActivityDialog, setShowActivityDialog] = useState(false)
     const { user } = useContext(UserContext);
+    const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
 
     const navigate = useNavigate();
     const serverPort = 3000

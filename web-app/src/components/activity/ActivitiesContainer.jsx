@@ -8,6 +8,7 @@ import { ActivityDialog } from './ActivityDialog';
 import { RecentActivities } from './RecentActivities';
 import { fetchActivityBasic } from '../../services/fetch-activity-basic';
 import { UserContext } from '../../context/UserContext';
+import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
 const today_beg = new Date()
 today_beg.setHours(0, 0, 0, 0);
@@ -25,12 +26,12 @@ export const ActivitiesContainer = ({
     const [activityObj, setActivityObj] = useState({});
     const [startDate, setStartDate] = useState(today_beg)
     const [endDate, setEndDate] = useState(today_end)
-    const [selectedActivity, setSelectedActivity] = useState(null);
     const [recentActivities, setRecentActivities] = useState(null)
     const [showActivityDialog, setShowActivityDialog] = useState(false)
     const [showActivityDropdown, setShowActivityDropdown] = useState(false)
     const [hasSearchedDates, setHasSearchedDates] = useState(false)
     const { user } = useContext(UserContext);
+    const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
 
     const handleClose = () => {
         setShowActivityDialog(false)
@@ -90,8 +91,6 @@ export const ActivitiesContainer = ({
             />
             {showActivityDropdown && activities.length ? (<ActivitiesDropdown
                 activities={Object.keys(activities).map(key => activities[key])}
-                selectedActivity={selectedActivity}
-                setSelectedActivity={setSelectedActivity}
                 setShowActivityDialog={setShowActivityDialog}
             />) : <h5>{hasSearchedDates ? 'No activities found - update date range' : null}</h5>}
 
@@ -99,8 +98,6 @@ export const ActivitiesContainer = ({
                 open={showActivityDialog}
                 onClose={handleClose}
                 activity={selectedActivity}
-                selectedActivity={selectedActivity}
-                setSelectedActivity={setSelectedActivity}
             />) : null}
 
             {recentActivities && recentActivities.length ? (<RecentActivities recentActivities={recentActivities} setSelectedActivity={setSelectedActivity} />) : null}
