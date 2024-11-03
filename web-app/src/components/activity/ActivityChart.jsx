@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import '../../styles/activity-chart.css'
 import * as d3 from 'd3';
 
-import jsonData from '../../test-data/test-activity-cycling.json';
 const selectedLapColor = 'blue'
 
 const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
@@ -94,7 +93,11 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
 
         svg.append("g")
             .call(d3.axisLeft(y));
-    }, [data]);
+
+        return () => {
+            tooltip.remove();
+        };
+    }, [data, selectedLaps, setSelectedLaps]);
 
     return <svg ref={ref}></svg>;
 };
