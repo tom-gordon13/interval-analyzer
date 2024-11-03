@@ -96,6 +96,7 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps }) => {
 
         return () => {
             tooltip.remove();
+            svg.selectAll("*").remove();
         };
     }, [data, selectedLaps, setSelectedLaps]);
 
