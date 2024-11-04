@@ -23,11 +23,10 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
         watts = !watts ? 0 : watts
         result.push({ timeIndex, watts });
     }
-    console.log('here', result)
     return result;
 }
 
-const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode }) => {
+export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode }) => {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -91,15 +90,65 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, is
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
         const paths = g.selectAll('.line')
-            .data(lapDataFull, ds => ds.name);
-
-        paths.enter().append('path')
+            .data(lapDataFull, ds => ds.name)
+            .enter().append('path')
             .attr('class', 'line')
             .attr('fill', 'none')
             .attr('stroke', ds => colorScale(ds.name))
             .attr('stroke-width', 1.5)
             .attr('d', ds => lineGenerator(ds.values));
 
+        let isDragging = false;
+        let startX, endX;
+
+        // Add a transparent rectangle to capture mouse events
+        g.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('fill', 'transparent')
+            .on('mousedown', function (event) {
+                isDragging = true;
+                startX = d3.pointer(event)[0];
+            })
+            .on('mousemove', function (event) {
+                if (isDragging) {
+                    endX = d3.pointer(event)[0];
+                    highlightSection(startX, endX);
+                }
+            })
+            .on('mouseup', function () {
+                isDragging = false;
+            });
+
+        // Drawing and highlight segments in edit mode
+        const highlightSection = (startX, endX) => {
+            const [xMin, xMax] = startX < endX ? [startX, endX] : [endX, startX];
+            const dataXMin = xScale.invert(xMin);
+            const dataXMax = xScale.invert(xMax);
+
+            g.selectAll('.line-segment').remove();
+
+            // Draw each line as separate segments
+            lapDataFull.forEach(ds => {
+                for (let i = 0; i < ds.values.length - 1; i++) {
+                    const point1 = ds.values[i];
+                    const point2 = ds.values[i + 1];
+
+                    // Check if the segment is within the selected range
+                    const isInRange = (point1.timeIndex >= dataXMin && point1.timeIndex <= dataXMax) ||
+                        (point2.timeIndex >= dataXMin && point2.timeIndex <= dataXMax);
+
+                    g.append('line')
+                        .attr('class', 'line-segment')
+                        .attr('x1', xScale(point1.timeIndex))
+                        .attr('y1', yScale(point1.watts))
+                        .attr('x2', xScale(point2.timeIndex))
+                        .attr('y2', yScale(point2.watts))
+                        .attr('stroke', isInRange ? 'orange' : colorScale(ds.name))
+                        .attr('stroke-width', 1.5);
+                }
+            });
+        };
         paths.exit().remove();
 
         const yAxis = d3.axisLeft(yScale)
@@ -147,5 +196,3 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, is
         </>
     );
 };
-
-export default LapChart;

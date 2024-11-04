@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button, Switch } from '@mui/material';
 import ActivityChart from './ActivityChart'
-import LapChart from './LapChart'
+import { LapChart } from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
 import ActivityRadioButtons from './ActivityRadioButtons'
 import LapPowerBuckets from './LapPowerBuckets'
