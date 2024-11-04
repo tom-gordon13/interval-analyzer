@@ -27,15 +27,15 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
     return result;
 }
 
-const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) => {
+const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode }) => {
     const ref = useRef(null);
 
     useEffect(() => {
         if (!selectedLaps || Object.keys(selectedLaps).length === 0) return;
 
         let lapDataFull = [];
-        let adjustmentValue = activity.laps[0].elapsed_time - activity.laps[0].end_index
-        let maxLapLength = 0
+        let adjustmentValue = activity.laps[0].elapsed_time - activity.laps[0].end_index;
+        let maxLapLength = 0;
 
         for (const lap in selectedLaps) {
             const match = lap.match(/\d+$/);
@@ -51,17 +51,19 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) 
                     adjustmentValue
                 )
             };
-            maxLapLength = Math.max(maxLapLength, activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index)
+            maxLapLength = Math.max(maxLapLength, activity.laps[lapIndex].end_index - activity.laps[lapIndex].start_index);
             lapDataFull.push(lapObj);
         }
-        setFullLapStream(lapDataFull.flatMap((lap) => lap.values.map(value => value.watts)))
+
+        setFullLapStream(lapDataFull.flatMap((lap) => lap.values.map(value => value.watts)));
 
         if (lapDataFull.length === 0) {
-            setFullLapStream([])
+            setFullLapStream([]);
             return;
         }
 
-        const svgWidth = 800, svgHeight = 400;
+        const svgWidth = isInEditMode ? 1200 : 800;
+        const svgHeight = 400;
         const margin = { top: 20, right: 20, bottom: 30, left: 20 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
@@ -83,7 +85,6 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) 
             .attr('width', svgWidth)
             .attr('height', svgHeight);
 
-        // Clear previous lines and legends
         svg.selectAll('*').remove();
 
         const g = svg.append('g')
@@ -92,7 +93,6 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) 
         const paths = g.selectAll('.line')
             .data(lapDataFull, ds => ds.name);
 
-        // Enter phase (add new lines)
         paths.enter().append('path')
             .attr('class', 'line')
             .attr('fill', 'none')
@@ -100,32 +100,26 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) 
             .attr('stroke-width', 1.5)
             .attr('d', ds => lineGenerator(ds.values));
 
-        // Exit phase (remove old lines)
         paths.exit().remove();
 
-        // Add Y-Axis
         const yAxis = d3.axisLeft(yScale)
-            .ticks(d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts)) / 50) // Generate ticks at intervals of 50
-            .tickSize(-width); // Extend ticks across the width for grid lines
+            .ticks(d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts)) / 50)
+            .tickSize(-width);
 
-        // Append the y-axis to the chart
         g.append('g')
             .call(yAxis)
-            .selectAll('line') // Add gridlines
+            .selectAll('line')
             .attr('stroke', '#ccc')
-            .attr('stroke-dasharray', '2,2'); // Optional: style for gridlines
+            .attr('stroke-dasharray', '2,2');
 
         const xAxis = d3.axisBottom(xScale)
             .ticks((d3.max(lapDataFull, ds => d3.max(ds.values, d => d.timeIndex)) - d3.min(lapDataFull, ds => d3.min(ds.values, d => d.timeIndex))) / (maxLapLength / 20))
-            .tickFormat(d => `${d}`);  // Format the ticks as seconds
+            .tickFormat(d => `${d}`);
 
-        // Append the x-axis to the chart
         g.append('g')
-            .attr('transform', `translate(0, ${height})`)  // Position it at the bottom
+            .attr('transform', `translate(0, ${height})`)
             .call(xAxis);
 
-
-        // Re-append legends after removing previous ones
         const legend = g.selectAll(".legend")
             .data(lapDataFull.map(ds => ds.name))
             .enter().append("g")
@@ -145,7 +139,7 @@ const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream }) 
             .style("text-anchor", "end")
             .text(d => d);
 
-    }, [selectedLaps, activity, powerMovingAvg]);
+    }, [selectedLaps, activity, powerMovingAvg, isInEditMode]);
 
     return (
         <>

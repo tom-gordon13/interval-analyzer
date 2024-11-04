@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button, Switch } from '@mui/material';
 import ActivityChart from './ActivityChart'
 import LapChart from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'
 import ActivityRadioButtons from './ActivityRadioButtons'
 import LapPowerBuckets from './LapPowerBuckets'
-import { updateActivityDetails } from '../../services/update-activity'
 import { upsertActivityBasic } from '../../services/upsert-activity-basic'
 import { getCookie } from '../../utils/browser-helpers';
 import { UserContext } from '../../context/UserContext';
@@ -20,16 +19,16 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const [powerBuckets, setPowerBuckets] = useState([])
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const [fullLapStream, setFullLapStream] = useState([])
+    const [isInEditMode, setIsInEditMode] = useState(false)
     const { user } = useContext(UserContext);
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
 
     const updateActivity = () => {
         if (activity) {
-            console.log(activity)
 
             const newLaps = activity.laps.map((lap, index) => {
-                if (index === 1) {
+                if (index === 0) {
 
                     return { ...lap, average_watts: 400 };
                 }
@@ -40,16 +39,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 ...activity,
                 laps: newLaps
             }
-
-            const accessToken = getCookie('stravaAccessToken')
-            const activityId = activity.id;
-            const updates = {
-                laps: newLaps
-            };
-
-            updateActivityDetails(activityId, updates, accessToken)
-                .then((updatedActivity) => console.log('Updated activity:', updatedActivity))
-                .catch((error) => console.error('Failed to update activity:', error));
+            setSelectedActivity(newActivity)
         }
     }
 
@@ -102,6 +92,10 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
         setSelectedLaps(testArray)
     }, [filterActive])
 
+    const handleToggle = () => {
+        setIsInEditMode(!isInEditMode)
+    }
+
     return (
         <Dialog
             open={open}
@@ -122,48 +116,57 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 }
             }}
         >
-            <DialogTitle sx={{ width: '35%' }}>Activity Details
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                >
-                    X
-                </IconButton>
-                <p><strong>Name:</strong> {name}</p>
-                <p><strong>Distance:</strong> {distance}</p>
-                <p><strong>Type:</strong> {type}</p>
-                <p><strong>Date:</strong> {activity.start_date_local.slice(0, 10)}</p>
-                <hr />
-                <div className='flex flex-col p-2 justify-between' sx={{ width: '100%' }}>
-                    <Button variant='contained' sx={{ marginBottom: '0.5rem' }} onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
-                    <Button onClick={updateActivity}>Update Activity</Button>
-                    <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
-                    <br />
-                    <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
-                    <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
-                    {selectedLaps && Object.keys(selectedLaps).length ? (
-                        <>
-                            <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} />
-                            <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={800} setMinMaxFilter={setPowerBuckets} />
-                        </>
-                    )
-                        : null}
+            <IconButton
+                aria-label="close"
+                onClick={onClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                X
+            </IconButton>
+            {!isInEditMode ?
+                <DialogTitle sx={{ width: '35%' }}>Activity Details
 
-                </div>
-            </DialogTitle>
-            <DialogContent>
+                    <div>
+                        <p><strong>Name:</strong> {name}</p>
+                        <p><strong>Distance:</strong> {distance}</p>
+                        <p><strong>Type:</strong> {type}</p>
+                        <p><strong>Date:</strong> {activity.start_date_local.slice(0, 10)}</p>
+                        <hr />
+                        <div className='flex flex-col p-2 justify-between' sx={{ width: '100%' }}>
+                            <Button variant='contained' sx={{ marginBottom: '0.5rem' }} onClick={() => setSelectedLaps({})}>Clear Selected Laps</Button>
+                            {/* <Button onClick={updateActivity}>Update Activity</Button> */}
+
+                            <Button variant='contained' onClick={() => setFilterActive(!filterActive)}>{filterActive ? 'Remove' : 'Apply'} Filters</Button>
+                            <br />
+                            <ActivitiesFilter title='Power Range (watts)' property='' minValue={minMaxPowerRange[0]} maxValue={minMaxPowerRange[1]} setMinMaxFilter={setMinMaxPowerFilter} />
+                            <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
+                            {selectedLaps && Object.keys(selectedLaps).length ? (
+                                <>
+                                    <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} />
+                                    <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={800} setMinMaxFilter={setPowerBuckets} />
+                                </>
+                            )
+                                : null}
+
+                        </div>
+                    </div>
+                </DialogTitle> : null}
+            <DialogContent >
                 <br />
                 {Object.keys(selectedLaps).length > 0 ? (<p>Number of Selected Laps: {Object.keys(selectedLaps).length}</p>) : null}
                 <hr />
-                {selectedActivity.streams.some(stream => stream.type === 'watts') ? <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} /> : <h2 className='flex justify-center items-center h-40'>No power data available</h2>}
+                {selectedActivity.streams.some(stream => stream.type === 'watts') ?
+                    <ActivityChart data={data} selectedLaps={selectedLaps} setSelectedLaps={setSelectedLaps} isInEditMode={isInEditMode} />
+                    : <h2 className='flex justify-center items-center h-40'>No power data available</h2>}
+
+                Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} />
+                <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
 
             </DialogContent>
         </Dialog>

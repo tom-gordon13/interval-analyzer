@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect, useState, useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home'
+import { Home } from './pages/Home'
 import HandleStravaCallback from './pages/HandleStravaCallback';
 import ActivityPage from './pages/ActivityPage';
 import NavMain from './components/NavMain';
@@ -10,7 +10,7 @@ import './styles/tailwind.css';
 import { UserContext } from './context/UserContext';
 
 
-function App() {
+export const App = () => {
   const [stravaAccessToken, setStravaAccessToken] = useState('');
   const { user, setUser } = useContext(UserContext);
 
@@ -32,5 +32,3 @@ function App() {
     </div >
   );
 }
-
-export default App;
