@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '@mui/material';
 import * as d3 from 'd3';
 
-function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, adjustment) {
+const generateDataPoints = (valuesArray, startIndex, numOfValues, movingAvgIdx, adjustment) => {
     const result = [];
     let movingAvgSum = 0;
     const adjustmentValue = adjustment || 0
@@ -27,7 +28,12 @@ function generateDataPoints(valuesArray, startIndex, numOfValues, movingAvgIdx, 
 }
 
 export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode }) => {
+    const [editAreaStaged, setEditAreaStaged] = useState(false)
     const ref = useRef(null);
+
+    const handleNewLap = () => {
+        setEditAreaStaged(false)
+    }
 
     useEffect(() => {
         if (!selectedLaps || Object.keys(selectedLaps).length === 0) return;
@@ -118,6 +124,8 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
             })
             .on('mouseup', function () {
                 isDragging = false;
+
+                if (startX && endX) setEditAreaStaged(true)
             });
 
         // Drawing and highlight segments in edit mode
@@ -125,9 +133,7 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
             const [xMin, xMax] = startX < endX ? [startX, endX] : [endX, startX];
             const dataXMin = xScale.invert(xMin);
             const dataXMax = xScale.invert(xMax);
-
             g.selectAll('.line-segment').remove();
-
             // Draw each line as separate segments
             lapDataFull.forEach(ds => {
                 for (let i = 0; i < ds.values.length - 1; i++) {
@@ -191,8 +197,26 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
     }, [selectedLaps, activity, powerMovingAvg, isInEditMode]);
 
     return (
-        <>
-            {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref} className='w-full'></svg> : null}
-        </>
+        <div style={{ position: 'relative' }}>
+            {selectedLaps && Object.keys(selectedLaps).length ? <svg ref={ref} className="w-full"></svg> : null}
+            {editAreaStaged && (
+                <div style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 10,
+                    pointerEvents: 'auto'
+                }}>
+                    <Button
+                        variant="contained"
+                        onClick={handleNewLap}
+                    >
+                        Create a new lap from X to Y
+                    </Button>
+                    <Button variant="contained" onClick={() => { setEditAreaStaged(false) }}>Cancel</Button>
+                </div>
+            )}
+        </div>
     );
 };
