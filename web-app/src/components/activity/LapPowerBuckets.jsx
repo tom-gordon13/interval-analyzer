@@ -2,22 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 const LapPowerBuckets = ({ fullLapStream, powerBuckets }) => {
-    useEffect(() => {
-        console.log('fullLapStream', fullLapStream)
-        console.log('powerBuckets', powerBuckets)
-    }, [fullLapStream, powerBuckets])
 
     const svgRef = useRef();
 
     useEffect(() => {
         const minValue = powerBuckets[0];
         const maxValue = powerBuckets[1];
-        console.log(minValue, maxValue)
 
         const belowMinCount = fullLapStream.filter(value => value < minValue).length;
         const withinRangeCount = fullLapStream.filter(value => value >= minValue && value <= maxValue).length;
         const aboveMaxCount = fullLapStream.filter(value => value > maxValue).length;
-        console.log(belowMinCount, withinRangeCount, aboveMaxCount)
 
         const data = [
             { label: 'Below Min', count: belowMinCount },

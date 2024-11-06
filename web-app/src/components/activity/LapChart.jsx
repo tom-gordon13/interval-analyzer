@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import * as d3 from 'd3';
+import { insertNewLap } from '../../services/insert-new-lap'
 
 const generateDataPoints = (valuesArray, startIndex, numOfValues, movingAvgIdx, adjustment) => {
     const result = [];
@@ -33,7 +34,8 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
     const ref = useRef(null);
 
     const handleNewLap = () => {
-        setEditAreaStaged(false)
+        const test = insertNewLap(activity, Math.min(...editRange), Math.max(...editRange))
+        console.log(test)
     }
 
     useEffect(() => {
@@ -116,55 +118,58 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
                 .attr('opacity', 0.7);
         }
 
-        g.append('rect')
-            .attr('width', width)
-            .attr('height', height)
-            .attr('fill', 'transparent')
-            .on('mousedown', function (event) {
-                isDragging = true;
-                startX = d3.pointer(event)[0];
-            })
-            .on('mousemove', function (event) {
-                if (isDragging) {
-                    endX = d3.pointer(event)[0];
-                    highlightSection(startX, endX);
-                }
-            })
-            .on('mouseup', function () {
-                isDragging = false;
-                if (startX && endX) {
-                    setEditAreaStaged(true)
-                    setEditRange([xScale.invert(startX), xScale.invert(endX)])
-                }
-            });
+        if (isInEditMode) {
+            g.append('rect')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('fill', 'transparent')
+                .on('mousedown', function (event) {
+                    isDragging = true;
+                    startX = d3.pointer(event)[0];
+                })
+                .on('mousemove', function (event) {
+                    if (isDragging) {
+                        endX = d3.pointer(event)[0];
+                        highlightSection(startX, endX);
+                    }
+                })
+                .on('mouseup', function () {
+                    isDragging = false;
+                    if (startX && endX) {
+                        setEditAreaStaged(true)
+                        setEditRange([xScale.invert(startX), xScale.invert(endX)])
+                    }
+                });
 
-        // Drawing and highlight segments in edit mode
-        const highlightSection = (startX, endX) => {
-            const [xMin, xMax] = startX < endX ? [startX, endX] : [endX, startX];
-            const dataXMin = xScale.invert(xMin);
-            const dataXMax = xScale.invert(xMax);
-            g.selectAll('.line-segment').remove();
-            // Draw each line as separate segments
-            lapDataFull.forEach(ds => {
-                for (let i = 0; i < ds.values.length - 1; i++) {
-                    const point1 = ds.values[i];
-                    const point2 = ds.values[i + 1];
+            // Drawing and highlight segments in edit mode
+            const highlightSection = (startX, endX) => {
+                const [xMin, xMax] = startX < endX ? [startX, endX] : [endX, startX];
+                const dataXMin = xScale.invert(xMin);
+                const dataXMax = xScale.invert(xMax);
+                g.selectAll('.line-segment').remove();
+                // Draw each line as separate segments
+                lapDataFull.forEach(ds => {
+                    for (let i = 0; i < ds.values.length - 1; i++) {
+                        const point1 = ds.values[i];
+                        const point2 = ds.values[i + 1];
 
-                    // Check if the segment is within the selected range
-                    const isInRange = (point1.timeIndex >= dataXMin && point1.timeIndex <= dataXMax) ||
-                        (point2.timeIndex >= dataXMin && point2.timeIndex <= dataXMax);
+                        // Check if the segment is within the selected range
+                        const isInRange = (point1.timeIndex >= dataXMin && point1.timeIndex <= dataXMax) ||
+                            (point2.timeIndex >= dataXMin && point2.timeIndex <= dataXMax);
 
-                    g.append('line')
-                        .attr('class', 'line-segment')
-                        .attr('x1', xScale(point1.timeIndex))
-                        .attr('y1', yScale(point1.watts))
-                        .attr('x2', xScale(point2.timeIndex))
-                        .attr('y2', yScale(point2.watts))
-                        .attr('stroke', isInRange ? 'orange' : colorScale(ds.name))
-                        .attr('stroke-width', 1.5);
-                }
-            });
-        };
+                        g.append('line')
+                            .attr('class', 'line-segment')
+                            .attr('x1', xScale(point1.timeIndex))
+                            .attr('y1', yScale(point1.watts))
+                            .attr('x2', xScale(point2.timeIndex))
+                            .attr('y2', yScale(point2.watts))
+                            .attr('stroke', isInRange ? 'orange' : colorScale(ds.name))
+                            .attr('stroke-width', 1.5);
+                    }
+                });
+            };
+        }
+
         paths.exit().remove();
 
         const yAxis = d3.axisLeft(yScale)

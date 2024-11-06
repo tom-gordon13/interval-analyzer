@@ -24,6 +24,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
 
+    console.log(activity)
     const updateActivity = () => {
         if (activity) {
 
