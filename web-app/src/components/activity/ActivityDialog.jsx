@@ -24,7 +24,6 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
 
-    console.log(activity)
     const updateActivity = () => {
         if (activity) {
 
@@ -167,7 +166,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
+                <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
 
             </DialogContent>
         </Dialog>

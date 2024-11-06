@@ -1,12 +1,12 @@
 export const insertNewLap = (activity, newLapStart, newLapEnd, parentLapIndex = 1) => {
     const beforeNewLap = calcNewLapValues(activity, 0, newLapStart - 1, 0)
     const newLap = calcNewLapValues(activity, newLapStart, newLapEnd, 1)
-    const afterNewLap = calcNewLapValues(activity, newLapEnd, activity.elapsed_time, 1)
+    const afterNewLap = calcNewLapValues(activity, newLapEnd, activity.elapsed_time, 2)
     // Call calcNewLapValues
     // before lapStart (if applicable)
     // for lapStart to lapEnd 
     // for after lapEnd (if applicable)
-    return [beforeNewLap, newLap, afterNewLap]
+    return { ...activity, laps: [beforeNewLap, newLap, afterNewLap] }
 }
 
 export const calcNewLapValues = (parentActivity, newLapStart, newLapEnd, parentLapIndex) => {
