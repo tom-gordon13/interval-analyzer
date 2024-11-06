@@ -18,7 +18,7 @@ export const ActivitiesDropdown = ({
             alert('Unsupported activity type')
             return
         }
-        const selectedActivityFull = await fetchActivityDetails(token, event.target.value)
+        const selectedActivityFull = await fetchActivityDetails(getCookie('stravaAccessToken'), event.target.value)
         setSelectedActivity(selectedActivityFull);
         setShowActivityDialog(true)
     };

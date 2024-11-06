@@ -29,6 +29,7 @@ const generateDataPoints = (valuesArray, startIndex, numOfValues, movingAvgIdx, 
 
 export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode }) => {
     const [editAreaStaged, setEditAreaStaged] = useState(false)
+    const [editRange, setEditRange] = useState([])
     const ref = useRef(null);
 
     const handleNewLap = () => {
@@ -107,7 +108,14 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
         let isDragging = false;
         let startX, endX;
 
-        // Add a transparent rectangle to capture mouse events
+        if (editAreaStaged) {
+            g.append('rect')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('fill', 'gray') // Gray color
+                .attr('opacity', 0.7);
+        }
+
         g.append('rect')
             .attr('width', width)
             .attr('height', height)
@@ -124,8 +132,10 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
             })
             .on('mouseup', function () {
                 isDragging = false;
-
-                if (startX && endX) setEditAreaStaged(true)
+                if (startX && endX) {
+                    setEditAreaStaged(true)
+                    setEditRange([xScale.invert(startX), xScale.invert(endX)])
+                }
             });
 
         // Drawing and highlight segments in edit mode
@@ -194,7 +204,7 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
             .style("text-anchor", "end")
             .text(d => d);
 
-    }, [selectedLaps, activity, powerMovingAvg, isInEditMode]);
+    }, [selectedLaps, activity, powerMovingAvg, isInEditMode, editAreaStaged]);
 
     return (
         <div style={{ position: 'relative' }}>
@@ -211,8 +221,9 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
                     <Button
                         variant="contained"
                         onClick={handleNewLap}
+                        sx={{ marginRight: '1rem' }}
                     >
-                        Create a new lap from X to Y
+                        {`Create a new lap from ${Math.round(Math.min(...editRange))} to ${Math.round(Math.max(...editRange))}`}
                     </Button>
                     <Button variant="contained" onClick={() => { setEditAreaStaged(false) }}>Cancel</Button>
                 </div>

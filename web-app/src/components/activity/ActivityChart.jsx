@@ -9,7 +9,7 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps, isInEditMode }) =>
 
     useEffect(() => {
         const svgWidth = isInEditMode ? 1200 : 800;
-        const svgHeight = 400;
+        const svgHeight = 300;
         const margin = { top: 20, right: 20, bottom: 30, left: 40 };
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
