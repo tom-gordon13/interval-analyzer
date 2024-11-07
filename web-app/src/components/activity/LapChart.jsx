@@ -7,7 +7,6 @@ const generateDataPoints = (valuesArray, startIndex, numOfValues, movingAvgIdx, 
     const result = [];
     let movingAvgSum = 0;
     const adjustmentValue = adjustment || 0
-
     for (let timeIndex = 0; timeIndex < numOfValues; timeIndex++) {
         const currIndex = startIndex + timeIndex + (startIndex > 0 ? adjustmentValue : 0)
         let watts;
@@ -35,8 +34,8 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
 
     const handleNewLap = () => {
         const test = insertNewLap(activity, Math.min(...editRange), Math.max(...editRange))
-        console.log('here', test)
         setSelectedActivity(test)
+        setEditAreaStaged(false)
     }
 
     useEffect(() => {
@@ -49,7 +48,6 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
         for (const lap in selectedLaps) {
             const match = lap.match(/\d+$/);
             const lapIndex = match ? parseInt(match[0], 10) - 1 : null;
-
             const lapObj = {
                 name: lap,
                 values: generateDataPoints(
@@ -82,7 +80,7 @@ export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStr
             .range([0, width]);
 
         const yScale = d3.scaleLinear()
-            .domain([0, d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts))])
+            .domain([d3.min(lapDataFull, ds => d3.min(ds.values, d => d.watts) - 50), d3.max(lapDataFull, ds => d3.max(ds.values, d => d.watts)) + 20])
             .range([height, 0]);
 
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10);

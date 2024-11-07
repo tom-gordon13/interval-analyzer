@@ -10,15 +10,14 @@ export const insertNewLap = (activity, newLapStart, newLapEnd, parentLapIndex = 
 }
 
 export const calcNewLapValues = (parentActivity, newLapStart, newLapEnd, parentLapIndex) => {
-    console.log(newLapStart, newLapEnd)
     const powerStream = parentActivity.streams.filter((stream) => stream.type === 'watts')[0].data.slice(newLapStart, newLapEnd + 1)
     const average_watts = powerStream.reduce((a, b) => a + b) / powerStream.length
 
     return {
-        average_watts: average_watts,
-        elapspsed_time: newLapEnd - newLapStart,
-        start_index: newLapStart,
-        end_index: newLapEnd,
+        average_watts: Math.round(average_watts),
+        elapsed_time: Math.round(newLapEnd - newLapStart),
+        start_index: Math.round(newLapStart),
+        end_index: Math.round(newLapEnd),
         id: null,
         lap_index: parentLapIndex
     }
