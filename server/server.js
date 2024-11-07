@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 dotenv.config({ path: './.env' }); // Load environment variables from .env file
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Enable CORS for all routes
 app.use(cors());
