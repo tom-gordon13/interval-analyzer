@@ -23,16 +23,21 @@ router.get('/:activityId', getActivityDetails, fetchActivityDetails, (req, res) 
     res.json(activityDetails);
 });
 
+router.get('/:activityId/edited-activity', (req, res) => {
+
+});
+
 router.post('/:activityId/edited-activity', async (req, res) => {
     try {
-        const userId = '123'
         const activity_data = req.body;
+        const userId = activity_data.athlete.id
 
         const edited_activity = {
             edited_activity_id: activity_data.id + '_e',
             original_activity_id: activity_data.id,
             activity_data: activity_data,
-            user_id: userId
+            user_id: userId,
+            uploaded_at: Date.now()
         }
 
         const result = await EditedActivity.findOneAndUpdate(

@@ -102,7 +102,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }
 
     const handleSaveEditedActivity = () => {
-        upsertEditedActivity('123', selectedActivity, getCookie('stravaAccessToken'))
+        upsertEditedActivity(selectedActivity, getCookie('stravaAccessToken'))
     }
 
     return (
@@ -181,7 +181,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
-                {isInEditMode && <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>}
+                <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
             </DialogContent>
         </Dialog >
     );

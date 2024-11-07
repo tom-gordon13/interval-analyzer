@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const serverPort = 3000
 
-export const upsertEditedActivity = async (userId, activityData, accessToken) => {
+export const upsertEditedActivity = async (activityData, accessToken) => {
     const activity_id = String(activityData.id)
     try {
         const response = await axios.post(
