@@ -7,6 +7,7 @@ import ActivityRadioButtons from './ActivityRadioButtons'
 import LapPowerBuckets from './LapPowerBuckets'
 import { upsertActivityBasic } from '../../services/upsert-activity-basic'
 import { upsertEditedActivity } from '../../services/upsert-edited-activity'
+import { fetchedEditedActivity } from '../../services/fetch-edited-activity';
 import { getCookie } from '../../utils/browser-helpers';
 import { UserContext } from '../../context/UserContext';
 import { SelectedActivityContext } from '../../context/SelectedActivityContext';
@@ -21,6 +22,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const [powerMovingAvg, setPowerMovingAvg] = useState(1)
     const [fullLapStream, setFullLapStream] = useState([])
     const [isInEditMode, setIsInEditMode] = useState(false)
+    const [editedActivity, setEditedActivity] = useState(null)
     const { user } = useContext(UserContext);
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
@@ -28,6 +30,15 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     useEffect(() => {
         if (activity.laps.length > 1) setIsInEditMode(false)
     }, [activity])
+
+    useEffect(async () => {
+        const editedActivity = await fetchedEditedActivity(selectedActivity.id, getCookie('stravaAccessToken'))
+        setEditedActivity(editedActivity)
+    }, [])
+
+    const handleSwapToEditedActivity = () => {
+        setSelectedActivity(editedActivity.activity_data)
+    }
 
     const updateActivity = () => {
         if (activity) {
@@ -182,6 +193,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
                 <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
+                {editedActivity && <Button onClick={handleSwapToEditedActivity}>Swap to edited activity</Button>}
             </DialogContent>
         </Dialog >
     );

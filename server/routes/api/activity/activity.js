@@ -23,7 +23,22 @@ router.get('/:activityId', getActivityDetails, fetchActivityDetails, (req, res) 
     res.json(activityDetails);
 });
 
-router.get('/:activityId/edited-activity', (req, res) => {
+router.get('/:activityId/edited-activity', async (req, res) => {
+    const { activityId } = req.params;
+    try {
+        const result = await EditedActivity.findOne({ original_activity_id: activityId })
+
+        if (!result) {
+            res.status(200).json({
+                response: 'No edited activity found'
+            });
+        } else {
+            res.status(200).json(result);
+        }
+    } catch (error) {
+        console.error('Error fetching edited activity:', error);
+        res.status(500).send('Something went wrong');
+    }
 
 });
 
