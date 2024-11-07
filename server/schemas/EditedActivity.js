@@ -20,6 +20,11 @@ const EditedActivitySchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: false
+    },
+    uploaded_at: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 });
 
