@@ -23,6 +23,8 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const [fullLapStream, setFullLapStream] = useState([])
     const [isInEditMode, setIsInEditMode] = useState(false)
     const [editedActivity, setEditedActivity] = useState(null)
+    const [editedActivitySelected, setEditedActivitySelected] = useState(false)
+    const [originalActivity, setOriginalAcitivity] = useState(activity)
     const { user } = useContext(UserContext);
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
     const { name, distance, type } = activity;
@@ -37,7 +39,9 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }, [])
 
     const handleSwapToEditedActivity = () => {
-        setSelectedActivity(editedActivity.activity_data)
+        const swappedAcitivty = editedActivitySelected ? originalActivity : editedActivity.activity_data
+        setSelectedActivity(swappedAcitivty)
+        setEditedActivitySelected(!editedActivitySelected)
     }
 
     const updateActivity = () => {
@@ -190,10 +194,11 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                     : <h2 className='flex justify-center items-center h-40'>No power data available</h2>}
 
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
+                Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} />
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
                 <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
-                {editedActivity && <Button onClick={handleSwapToEditedActivity}>Swap to edited activity</Button>}
+                {/* {editedActivity && <Button onClick={handleSwapToEditedActivity}>Swap to edited activity</Button>} */}
             </DialogContent>
         </Dialog >
     );
