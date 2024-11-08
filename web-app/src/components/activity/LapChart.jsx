@@ -27,15 +27,16 @@ const generateDataPoints = (valuesArray, startIndex, numOfValues, movingAvgIdx, 
     return result;
 }
 
-export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode, setSelectedActivity }) => {
+export const LapChart = ({ selectedLaps, activity, powerMovingAvg, setFullLapStream, isInEditMode, setSelectedActivity, setEditedActivitySelected }) => {
     const [editAreaStaged, setEditAreaStaged] = useState(false)
     const [editRange, setEditRange] = useState([])
     const ref = useRef(null);
 
     const handleNewLap = () => {
-        const test = insertNewLap(activity, Math.min(...editRange), Math.max(...editRange))
-        setSelectedActivity(test)
+        const tempNewActivity = insertNewLap(activity, Math.min(...editRange), Math.max(...editRange))
+        setSelectedActivity(tempNewActivity)
         setEditAreaStaged(false)
+        setEditedActivitySelected(true)
     }
 
     useEffect(() => {

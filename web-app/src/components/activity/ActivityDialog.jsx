@@ -39,8 +39,9 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }, [])
 
     const handleSwapToEditedActivity = () => {
-        const swappedAcitivty = editedActivitySelected ? originalActivity : editedActivity.activity_data
-        setSelectedActivity(swappedAcitivty)
+        const swappedActivity = editedActivitySelected ? originalActivity : editedActivity.activity_data
+        setSelectedActivity(swappedActivity)
+        // setEditedActivity(swappedActivity)
         setEditedActivitySelected(!editedActivitySelected)
     }
 
@@ -196,9 +197,8 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
                 Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} />
                 <br />
-                <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} />
+                <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} setEditedActivitySelected={setEditedActivitySelected} />
                 <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
-                {/* {editedActivity && <Button onClick={handleSwapToEditedActivity}>Swap to edited activity</Button>} */}
             </DialogContent>
         </Dialog >
     );

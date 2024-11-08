@@ -14,7 +14,7 @@ const ActivityChart = () => {
     useEffect(() => {
         // Ensure the chart is not initialized more than once
         if (chartInstance.current) {
-            chartInstance.current.destroy();
+            // chartInstance.current.destroy();
         }
 
         if (chartContainer && chartContainer.current) {
