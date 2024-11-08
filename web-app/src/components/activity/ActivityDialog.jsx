@@ -35,6 +35,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
     useEffect(async () => {
         const editedActivity = await fetchedEditedActivity(selectedActivity.id, getCookie('stravaAccessToken'))
+        console.log('editedActivity', editedActivity)
         setEditedActivity(editedActivity)
     }, [])
 

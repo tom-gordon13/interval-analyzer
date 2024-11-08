@@ -3,8 +3,6 @@ const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-const EditedActivity = require('../../../schemas/EditedActivity')
-
 const getActivityDetails = require('../../../middleware/fetch-activity')
 const fetchActivityDetails = require('../../../middleware/fetch-activity-plus')
 const updateActivityDetails = require('../../../middleware/update-activity-details')

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const EditedActivity = require('../schemas/EditedActivity')
 
 const upsertEditedActivity = async (req, res, next) => {
     try {

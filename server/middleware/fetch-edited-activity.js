@@ -1,4 +1,5 @@
 const axios = require('axios');
+const EditedActivity = require('../schemas/EditedActivity')
 
 const fetchEditedActivity = async (req, res, next) => {
     const { activityId } = req.params;

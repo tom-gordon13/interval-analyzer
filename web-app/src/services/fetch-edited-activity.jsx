@@ -13,12 +13,12 @@ export const fetchedEditedActivity = async (activityId, accessToken) => {
                 }
             }
         );
-        console.log(response)
+        console.log('here', response)
 
         const data = response.data;
         return data;
     } catch (error) {
         // Handle errors
-        console.error('Error upserting activity:', error.response?.data?.message || error.message);
+        console.error('Error fetching edited activity:', error.response?.data?.message || error.message);
     }
 };
