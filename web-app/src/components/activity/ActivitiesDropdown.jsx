@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { fetchActivityDetails } from '../../utils/fetch-activity-details';
+import { fetchActivityFull } from '../../services/fetch-activity-full'
 import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
 const supportedActivityTypes = ['Ride', 'VirtualRide']
@@ -16,7 +16,7 @@ export const ActivitiesDropdown = ({
             alert('Unsupported activity type')
             return
         }
-        const selectedActivityFull = await fetchActivityDetails(event.target.value)
+        const selectedActivityFull = await fetchActivityFull(event.target.value.id)
         setSelectedActivity(selectedActivityFull);
         setShowActivityDialog(true)
     };

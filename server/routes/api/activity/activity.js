@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use(cors());
 
 router.get('/:activityId', getActivityDetails, fetchActivityDetails, (req, res) => {
+    console.log('yurt')
     const activityDetails = req.activityDetails;
     const extra = req.activityDetailsExtra
     res.json(activityDetails);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Dialog, DialogTitle, DialogActions, DialogContent, IconButton, Button, Switch } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, IconButton, Button, Switch } from '@mui/material';
 import ActivityChart from './ActivityChart'
 import { LapChart } from './LapChart'
 import ActivitiesFilter from './ActivitiesFilter'

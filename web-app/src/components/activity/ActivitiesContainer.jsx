@@ -14,8 +14,7 @@ today_beg.setHours(0, 0, 0, 0);
 const today_end = new Date()
 today_end.setHours(23, 59, 0, 0);
 
-export const ActivitiesContainer = ({
-}) => {
+export const ActivitiesContainer = () => {
     const [activities, setActivities] = useState({});
     const [activityObj, setActivityObj] = useState({});
     const [startDate, setStartDate] = useState(today_beg)
