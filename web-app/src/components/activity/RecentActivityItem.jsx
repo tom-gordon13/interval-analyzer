@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ListItemButton, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
-import { fetchActivityDetails } from '../../utils/fetch-activity-details';
 import { fetchActivityFull } from '../../services/fetch-activity-full';
-import { getCookie } from '../../utils/browser-helpers';
+
 
 export const RecentActivityItem = ({ activity, setSelectedActivity }) => {
     const date = new Date(activity.activity_date);
@@ -13,7 +12,7 @@ export const RecentActivityItem = ({ activity, setSelectedActivity }) => {
     })
 
     const handleClick = async (e) => {
-        const selectedActivityFull = await fetchActivityFull(getCookie('stravaAccessToken'), activity.activity_id)
+        const selectedActivityFull = await fetchActivityFull(activity.activity_id)
         setSelectedActivity(selectedActivityFull);
     }
 

@@ -24,6 +24,5 @@ export const formatActivities = (activities) => {
             totalDistance: totalFieldSum(currType, 'distance')
         }
     })
-    console.log(activityObject)
     return activityObject
 }

@@ -18,12 +18,12 @@ const ActivitiesSummaryCard = ({
             <div className='date-container'>
                 <div className='date-pick-box'>
                     <h5 className='date-pick-header text-center'>Start Date</h5>
-                    <DatePicker className='m-2 text-black' selected={startDate} onChange={(date) => handleDateChange(date, 'start')} />
+                    <DatePicker className='m-2 text-black' selected={startDate || undefined} onChange={(date) => handleDateChange(date, 'start')} />
 
                 </div>
                 <div className='date-pick-box'>
                     <h5 className='date-pick-header text-center'>End Date</h5>
-                    <DatePicker className='m-2 text-black' selected={endDate} onChange={(date) => handleDateChange(date, 'end')} />
+                    <DatePicker className='m-2 text-black' selected={endDate || undefined} onChange={(date) => handleDateChange(date, 'end')} />
 
                 </div>
             </div>

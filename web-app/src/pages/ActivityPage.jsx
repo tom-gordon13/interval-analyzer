@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { fetchActivity } from '../services/fetch-activity-full';
+import { fetchActivityFull } from '../services/fetch-activity-full';
 import { ActivityDialog } from '../components/activity/ActivityDialog';
 import { UserContext } from '../context/UserContext';
 import { SelectedActivityContext } from '../context/SelectedActivityContext';
@@ -16,38 +15,28 @@ const ActivityPage = ({ stravaAccessToken }) => {
     const { selectedActivity, setSelectedActivity } = useContext(SelectedActivityContext)
 
     const navigate = useNavigate();
-    const serverPort = 3000
 
     const handleClose = () => {
         setShowActivityDialog(false)
     }
 
     useEffect(() => {
-        const fetchActivity = async () => {
+        const fetchData = async () => {
             try {
-                setLoading(true);
-                const response = await axios.get(`http://localhost:${serverPort}/activity/${activityId}`, {
-                    headers: {
-                        Authorization: `Bearer ${stravaAccessToken}`
-                    }
-                })
-                return response.data
-            } catch (err) {
-                setError(err.message);
+                if (activityId) {
+                    const fetchedActivity = await fetchActivityFull(activityId);
+                    setSelectedActivity(fetchedActivity);
+                    setShowActivityDialog(true);
+                }
+            } catch (e) {
+                console.log(`Error: ${e}`);
             } finally {
                 setLoading(false);
             }
         };
 
-        if (activityId) {
-            const fetchData = async () => {
-                const fetchedActivity = await fetchActivity();
-                setSelectedActivity(fetchedActivity)
-                setShowActivityDialog(true)
-            };
-
-            fetchData();
-        }
+        setLoading(true);
+        fetchData();
     }, [activityId, stravaAccessToken]);
 
     if (loading) return <p>Loading...</p>;

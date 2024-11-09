@@ -9,6 +9,7 @@ const updateActivityDetails = require('../../../middleware/update-activity-detai
 const extractAccessToken = require('../../../middleware/extract-access-token')
 const fetchEditedActivity = require('../../../middleware/fetch-edited-activity')
 const upsertEditedActivity = require('../../../middleware/upsert-edited-activity')
+const fetchActivitiesSummmary = require('../../../middleware/fetch-activities-summary')
 
 const app = express();
 const router = express.Router();
@@ -21,6 +22,11 @@ router.get('/:activityId', getActivityDetails, fetchActivityDetails, (req, res) 
     const activityDetails = req.activityDetails;
     const extra = req.activityDetailsExtra
     res.json(activityDetails);
+});
+
+router.get('/', fetchActivitiesSummmary, async (req, res) => {
+    const activitiesSummary = req.data
+    res.json(activitiesSummary)
 });
 
 router.get('/:activityId/edited-activity', fetchEditedActivity, async (req, res) => {

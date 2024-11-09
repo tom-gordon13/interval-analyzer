@@ -7,6 +7,7 @@ import { ActivitiesDropdown } from './ActivitiesDropdown';
 import { ActivityDialog } from './ActivityDialog';
 import { RecentActivities } from './RecentActivities';
 import { fetchActivityBasic } from '../../services/fetch-activity-basic';
+import { fetchActivitiesSummary } from '../../services/fetch-activities-summary'
 import { UserContext } from '../../context/UserContext';
 import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
@@ -14,11 +15,6 @@ const today_beg = new Date()
 today_beg.setHours(0, 0, 0, 0);
 const today_end = new Date()
 today_end.setHours(23, 59, 0, 0);
-
-const axiosStrava = axios.create({
-    baseURL: 'https://www.strava.com',
-    timeout: 10000,
-});
 
 export const ActivitiesContainer = ({
 }) => {
@@ -55,34 +51,29 @@ export const ActivitiesContainer = ({
 
     const handleDateChange = (date, pickerType) => {
         if (pickerType === 'start') {
-            setStartDate(date);
+            setStartDate(date || today_beg);
         } else {
-            setEndDate(date);
+            setEndDate(date || today_end);
         }
     };
 
-    const handleActivitiesSummaryClick = () => {
-        setIsLoading(true)
-        const apiUrl = `/api/v3/athlete/activities?after=${startDate.getTime() / 1000}&before=${endDate.getTime() / 1000}&page=1&per_page=200`;
-        const token = getCookie('stravaAccessToken')
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-        };
+    const handleActivitiesSummaryClick = async () => {
+        try {
+            setIsLoading(true)
+            const before = endDate.getTime() / 1000
+            const after = startDate.getTime() / 1000
 
-        axiosStrava.get(apiUrl, { headers })
-            .then((response) => {
-                const activities = response.data;
-                setActivities(activities)
-                setActivityObj(formatActivities(activities))
-                setShowActivityDropdown(true)
-            })
-            .catch((error) => {
-                console.error('Error fetching recent activities:', error);
-            }).finally(() => {
-                setIsLoading(false);
-            });
-
-        setHasSearchedDates(true)
+            const summary = await fetchActivitiesSummary(before, after)
+            const activities = summary.data;
+            setActivities(activities)
+            setActivityObj(formatActivities(activities))
+            setShowActivityDropdown(true)
+        } catch (e) {
+            console.log('Error loading activities summary', e)
+        } finally {
+            setIsLoading(false)
+            setHasSearchedDates(true)
+        }
     }
 
     return (

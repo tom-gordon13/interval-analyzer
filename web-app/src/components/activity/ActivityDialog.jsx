@@ -185,7 +185,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
                 Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} />
-                <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
+                <Button onClick={handleSaveEditedActivity} variant='contained'>{editedActivity ? 'Override' : 'Save'} edited Activity</Button>
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} setEditedActivitySelected={setEditedActivitySelected} />
             </DialogContent>
