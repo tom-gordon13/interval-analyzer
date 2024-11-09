@@ -44,9 +44,12 @@ export const ActivitiesContainer = ({
         }
     }, [selectedActivity]);
 
-    useEffect(async () => {
-        const recentActivitiesTemp = await fetchActivityBasic(user.id, 3, getCookie('stravaAccessToken'))
-        setRecentActivities(recentActivitiesTemp)
+    useEffect(() => {
+        const recentActivitiesHandler = async () => {
+            const recentActivitiesTemp = await fetchActivityBasic(user.id, 3, getCookie('stravaAccessToken'))
+            setRecentActivities(recentActivitiesTemp)
+        }
+        recentActivitiesHandler()
     }, [])
 
 

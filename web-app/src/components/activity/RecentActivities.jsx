@@ -10,8 +10,8 @@ export const RecentActivities = ({ recentActivities, setSelectedActivity }) => {
         <div className='mt-16'>
             <h2 className='mb-4'>Recently Viewed Activities</h2>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                {recentActivities?.map((activity) => {
-                    return (<RecentActivityItem activity={activity} setSelectedActivity={setSelectedActivity} />)
+                {recentActivities?.map((activity, index) => {
+                    return (<RecentActivityItem activity={activity} setSelectedActivity={setSelectedActivity} key={activity.id || index} />)
                 })}
             </List>
         </div >

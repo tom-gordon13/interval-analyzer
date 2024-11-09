@@ -16,7 +16,6 @@ export const fetchActivityBasic = async (userId, quantity, accessToken) => {
         );
 
         const data = response.data;
-        console.log(`${quantity} activit${quantity > 1 ? 'ies' : 'y'} fetched successfully:`, data);
         return data;
     } catch (error) {
         // Handle errors

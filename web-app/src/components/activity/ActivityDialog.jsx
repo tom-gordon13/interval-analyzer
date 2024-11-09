@@ -36,19 +36,16 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     const editedActivityHandler = async () => {
         const editedActivity = await fetchedEditedActivity(selectedActivity.id, getCookie('stravaAccessToken'))
         setEditedActivity(editedActivity.activity_data)
-        setSelectedLaps([])
-        // setSelectedActivity(editedActivity.activity_data)
+        setSelectedLaps({})
     }
 
     useEffect(() => {
-
         editedActivityHandler()
     }, [])
 
     const handleSwapToEditedActivity = () => {
         const swappedActivity = editedActivitySelected ? originalActivity : editedActivity
         setSelectedActivity(swappedActivity)
-        // setEditedActivity(swappedActivity)
         setEditedActivitySelected(!editedActivitySelected)
         editedActivityHandler()
     }
@@ -106,6 +103,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
     const handleToggle = () => {
         setIsInEditMode(!isInEditMode)
+        setSelectedLaps({ 'Lap 1': activity.laps[0].average_watts }) // Automatically select the first lap when entering edit mode
     }
 
     const handleSaveEditedActivity = () => {
@@ -135,7 +133,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
             <IconButton
                 aria-label="close"
                 onClick={() => {
-                    setSelectedLaps([])
+                    setSelectedLaps({})
                     onClose()
                 }}
                 sx={{
@@ -167,7 +165,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                                 <ActivityRadioButtons sx={{ margin: '10rem' }} values={powerRadioValues} labels={powerRadioLabels} title='Power Moving Average' setUltimateValue={setPowerMovingAvg} />
                                 {selectedLaps && Object.keys(selectedLaps).length ? (
                                     <>
-                                        <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} />
+                                        <LapPowerBuckets powerBuckets={powerBuckets} fullLapStream={fullLapStream} isOpen={selectedLaps && Object.keys(selectedLaps).length} />
                                         <ActivitiesFilter title='Power Buckets' property='' minValue={0} maxValue={800} setMinMaxFilter={setPowerBuckets} />
                                     </>
                                 )
@@ -187,9 +185,9 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
 
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
                 Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} />
+                <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} setEditedActivitySelected={setEditedActivitySelected} />
-                <Button onClick={handleSaveEditedActivity} variant='contained'>Save edited Activity</Button>
             </DialogContent>
         </Dialog >
     );

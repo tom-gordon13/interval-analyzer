@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
 import { fetchActivityDetails } from '../../utils/fetch-activity-details';
 import { fetchActivityFull } from '../../services/fetch-activity-full';
 import { getCookie } from '../../utils/browser-helpers';
@@ -18,7 +18,7 @@ export const RecentActivityItem = ({ activity, setSelectedActivity }) => {
     }
 
     return (
-        <ListItem button value={activity.activity_id} onClick={handleClick}>
+        <ListItemButton value={activity.activity_id} onClick={handleClick}>
             <ListItemAvatar>
                 <Avatar>
                     {/* <DirectionsBikeIcon /> */}
@@ -29,6 +29,6 @@ export const RecentActivityItem = ({ activity, setSelectedActivity }) => {
                 secondary={activityDate}
                 sx={{ color: 'black' }}
             />
-        </ListItem>
+        </ListItemButton>
     );
 };
