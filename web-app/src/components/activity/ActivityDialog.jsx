@@ -8,7 +8,6 @@ import LapPowerBuckets from './LapPowerBuckets'
 import { upsertActivityBasic } from '../../services/upsert-activity-basic'
 import { upsertEditedActivity } from '../../services/upsert-edited-activity'
 import { fetchedEditedActivity } from '../../services/fetch-edited-activity';
-import { getCookie } from '../../utils/browser-helpers';
 import { UserContext } from '../../context/UserContext';
 import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
@@ -34,7 +33,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }, [activity])
 
     const editedActivityHandler = async () => {
-        const editedActivity = await fetchedEditedActivity(selectedActivity.id, getCookie('stravaAccessToken'))
+        const editedActivity = await fetchedEditedActivity(selectedActivity.id)
         setEditedActivity(editedActivity.activity_data)
         setSelectedLaps({})
     }
@@ -58,8 +57,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                 sport_type: selectedActivity.sport_type,
                 activity_date: selectedActivity.start_date
             }
-            const accessToken = getCookie('stravaAccessToken')
-            upsertActivityBasic(user.id, activityData, accessToken)
+            upsertActivityBasic(user.id, activityData)
         }
 
     }, [selectedActivity])
@@ -107,7 +105,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     }
 
     const handleSaveEditedActivity = () => {
-        upsertEditedActivity(selectedActivity, getCookie('stravaAccessToken'))
+        upsertEditedActivity(selectedActivity)
     }
 
     return (
@@ -184,7 +182,7 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
                     : <h2 className='flex justify-center items-center h-40'>No power data available</h2>}
 
                 Edit Mode: <Switch checked={isInEditMode} onChange={handleToggle} disabled={activity.laps.length > 1} />
-                Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} />
+                Swap to Edited Activity: <Switch checked={editedActivitySelected} onChange={handleSwapToEditedActivity} disabled={!editedActivity} />
                 <Button onClick={handleSaveEditedActivity} variant='contained'>{editedActivity ? 'Override' : 'Save'} edited Activity</Button>
                 <br />
                 <LapChart selectedLaps={selectedLaps} setSelectedActivity={setSelectedActivity} lapData={data} activity={activity} powerMovingAvg={powerMovingAvg} setFullLapStream={setFullLapStream} isInEditMode={isInEditMode} setEditedActivitySelected={setEditedActivitySelected} />

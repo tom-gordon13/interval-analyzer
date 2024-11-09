@@ -1,10 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { getCookie } from '../../utils/browser-helpers';
 import { fetchActivityDetails } from '../../utils/fetch-activity-details';
 import { SelectedActivityContext } from '../../context/SelectedActivityContext';
 
-const token = getCookie('stravaAccessToken')
 const supportedActivityTypes = ['Ride', 'VirtualRide']
 
 export const ActivitiesDropdown = ({
@@ -18,7 +16,7 @@ export const ActivitiesDropdown = ({
             alert('Unsupported activity type')
             return
         }
-        const selectedActivityFull = await fetchActivityDetails(getCookie('stravaAccessToken'), event.target.value)
+        const selectedActivityFull = await fetchActivityDetails(event.target.value)
         setSelectedActivity(selectedActivityFull);
         setShowActivityDialog(true)
     };

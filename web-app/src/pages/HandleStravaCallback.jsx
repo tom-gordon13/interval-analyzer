@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 import { UserContext } from '../context/UserContext';
 
 const serverPort = process.env.REACT_APP_SERVER_PORT
-console.log(serverPort)
 
 const HandleStravaCallback = ({ }) => {
     const navigate = useNavigate();

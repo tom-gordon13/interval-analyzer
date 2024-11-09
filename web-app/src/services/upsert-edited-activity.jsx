@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { getCookie } from '../utils/browser-helpers';
 
 const serverPort = process.env.REACT_APP_SERVER_PORT
 
-export const upsertEditedActivity = async (activityData, accessToken) => {
+export const upsertEditedActivity = async (activityData) => {
     const activity_id = String(activityData.id)
+    const accessToken = getCookie('stravaAccessToken')
     try {
         const response = await axios.post(
             `http://localhost:${serverPort}/activity/${activity_id}/edited-activity`,

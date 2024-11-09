@@ -1,4 +1,7 @@
-export const fetchActivityDetails = async (accessToken, activity) => {
+import { getCookie } from './browser-helpers';
+
+export const fetchActivityDetails = async (activity) => {
+    const accessToken = getCookie('stravaAccessToken')
     try {
         const response = await fetch(`https://www.strava.com/api/v3/activities/${activity.id}?include_all_efforts="true"`, {
             headers: {

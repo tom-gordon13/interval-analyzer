@@ -1,9 +1,12 @@
 import axios from 'axios';
+import { getCookie } from '../utils/browser-helpers';
 
 const serverPort = process.env.REACT_APP_SERVER_PORT
 
-export const upsertActivityBasic = async (userId, activityData, accessToken) => {
+export const upsertActivityBasic = async (userId, activityData) => {
     activityData.activity_id = String(activityData.activity_id)
+    const accessToken = getCookie('stravaAccessToken')
+
     try {
         const response = await axios.put(
             `http://localhost:${serverPort}/user/${userId}/activity-basic/${activityData.id}`,

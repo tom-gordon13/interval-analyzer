@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import ActivitiesSummaryCard from './ActivitiesSummaryCard';
-import { getCookie } from '../../utils/browser-helpers';
-import axios from 'axios';
 import { formatActivities } from '../../utils/format-activities';
 import { ActivitiesDropdown } from './ActivitiesDropdown';
 import { ActivityDialog } from './ActivityDialog';
@@ -42,7 +40,7 @@ export const ActivitiesContainer = ({
 
     useEffect(() => {
         const recentActivitiesHandler = async () => {
-            const recentActivitiesTemp = await fetchActivityBasic(user.id, 3, getCookie('stravaAccessToken'))
+            const recentActivitiesTemp = await fetchActivityBasic(user.id, 3)
             setRecentActivities(recentActivitiesTemp)
         }
         recentActivitiesHandler()
