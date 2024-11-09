@@ -33,48 +33,38 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
         if (activity.laps.length > 1) setIsInEditMode(false)
     }, [activity])
 
-    useEffect(async () => {
+    const editedActivityHandler = async () => {
         const editedActivity = await fetchedEditedActivity(selectedActivity.id, getCookie('stravaAccessToken'))
-        console.log('editedActivity', editedActivity)
-        setEditedActivity(editedActivity)
-    }, [])
-
-    const handleSwapToEditedActivity = () => {
-        const swappedActivity = editedActivitySelected ? originalActivity : editedActivity.activity_data
-        setSelectedActivity(swappedActivity)
-        // setEditedActivity(swappedActivity)
-        setEditedActivitySelected(!editedActivitySelected)
-    }
-
-    const updateActivity = () => {
-        if (activity) {
-
-            const newLaps = activity.laps.map((lap, index) => {
-                if (index === 0) {
-
-                    return { ...lap, average_watts: 400 };
-                }
-
-                return lap;
-            });
-            const newActivity = {
-                ...activity,
-                laps: newLaps
-            }
-            setSelectedActivity(newActivity)
-        }
+        setEditedActivity(editedActivity.activity_data)
+        setSelectedLaps([])
+        // setSelectedActivity(editedActivity.activity_data)
     }
 
     useEffect(() => {
-        if (!selectedActivity) return
-        const activityData = {
-            activity_id: selectedActivity.id,
-            name: selectedActivity.name,
-            sport_type: selectedActivity.sport_type,
-            activity_date: selectedActivity.start_date
+
+        editedActivityHandler()
+    }, [])
+
+    const handleSwapToEditedActivity = () => {
+        const swappedActivity = editedActivitySelected ? originalActivity : editedActivity
+        setSelectedActivity(swappedActivity)
+        // setEditedActivity(swappedActivity)
+        setEditedActivitySelected(!editedActivitySelected)
+        editedActivityHandler()
+    }
+
+    useEffect(() => {
+        if (selectedActivity) {
+            const activityData = {
+                activity_id: selectedActivity.id,
+                name: selectedActivity.name,
+                sport_type: selectedActivity.sport_type,
+                activity_date: selectedActivity.start_date
+            }
+            const accessToken = getCookie('stravaAccessToken')
+            upsertActivityBasic(user.id, activityData, accessToken)
         }
-        const accessToken = getCookie('stravaAccessToken')
-        upsertActivityBasic(user.id, activityData, accessToken)
+
     }, [selectedActivity])
 
     const powerRadioValues = [1, 3, 5, 10]
@@ -105,13 +95,13 @@ export const ActivityDialog = ({ open, onClose, activity }) => {
     useEffect(() => {
         if (!filterActive) {
             setSelectedLaps({})
-            return
+        } else {
+            const testArray = data.filter((lap) => lap.value > minMaxPowerFilter[0] - 1 && lap.value < minMaxPowerFilter[1] + 1).reduce((acc, lap) => {
+                acc[lap.category] = lap.value;
+                return acc;
+            }, {});
+            setSelectedLaps(testArray)
         }
-        const testArray = data.filter((lap) => lap.value > minMaxPowerFilter[0] - 1 && lap.value < minMaxPowerFilter[1] + 1).reduce((acc, lap) => {
-            acc[lap.category] = lap.value;
-            return acc;
-        }, {});
-        setSelectedLaps(testArray)
     }, [filterActive])
 
     const handleToggle = () => {

@@ -97,7 +97,7 @@ const ActivityChart = ({ data, selectedLaps, setSelectedLaps, isInEditMode }) =>
             .call(d3.axisLeft(yScale));
 
         return () => {
-            tooltip.remove();
+            if (tooltip) tooltip.remove();
             d3.select(ref.current).selectAll("*").remove();
         };
     }, [data, selectedLaps, setSelectedLaps, isInEditMode]);

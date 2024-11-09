@@ -4,7 +4,6 @@ import { RecentActivityItem } from './RecentActivityItem';
 
 export const RecentActivities = ({ recentActivities, setSelectedActivity }) => {
     useEffect(() => {
-        if (recentActivities) console.log(recentActivities[0])
     }, [recentActivities])
 
     return (
