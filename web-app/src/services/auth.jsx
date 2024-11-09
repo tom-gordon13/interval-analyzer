@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@mui/material';
 
-const serverPort = 3000;
+const serverPort = process.env.REACT_APP_SERVER_PORT;
 
 
 const AuthButton = () => {

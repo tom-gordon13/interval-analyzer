@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const serverPort = 3000
+const serverPort = process.env.REACT_APP_SERVER_PORT
 
 export const upsertEditedActivity = async (activityData, accessToken) => {
     const activity_id = String(activityData.id)

@@ -1,26 +1,23 @@
 import axios from 'axios';
 
-const serverPort = 3000
+const serverPort = process.env.REACT_APP_SERVER_PORT;
 
 export const updateActivityDetails = async (activityId, updateData, accessToken) => {
     try {
-        const response = await fetch(`http://localhost:${serverPort}/activity-basic/${activityId}`, {
-            method: 'PUT',
+        const response = await axios.put(`http://localhost:${serverPort}/activity-basic/${activityId}`, updateData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(updateData)
+            }
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to update activity');
-        }
-        const data = await response.json();
-        console.log('Activity updated successfully:', data);
-        return data;
+        console.log('Activity updated successfully:', response.data);
+        return response.data;
     } catch (error) {
-        console.error('Error updating activity:', error.message);
+        if (error.response) {
+            console.error('Error updating activity:', error.response.data.message || error.message);
+        } else {
+            console.error('Error updating activity:', error.message);
+        }
     }
 };

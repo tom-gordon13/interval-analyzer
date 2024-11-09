@@ -4,7 +4,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { UserContext } from '../context/UserContext';
 
-const serverPort = 3000
+const serverPort = process.env.REACT_APP_SERVER_PORT
+console.log(serverPort)
 
 const HandleStravaCallback = ({ }) => {
     const navigate = useNavigate();

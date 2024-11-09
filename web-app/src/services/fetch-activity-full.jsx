@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getCookie } from '../utils/browser-helpers';
 
-const serverPort = 3000
+const serverPort = process.env.REACT_APP_SERVER_PORT
 
 export const fetchActivityFull = async (activityId) => {
     const stravaAccessToken = getCookie('stravaAccessToken')
