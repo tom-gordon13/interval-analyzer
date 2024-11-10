@@ -17,9 +17,9 @@ function NavMain({ }) {
             <h3 className=' text-black-500'>
                 Interval Analyzer
             </h3>
-            <div className="w-80 mt-0 h-20 flex justify-end pt-6 pr-4 pl-4">
+            <div className="w-80 mt-0 h-20 flex justify-end">
                 {user ? <h4 className='mr-4'>Hi, {user.firstname}</h4> : null}
-                <Button onClick={handleSignOut} variant='contained' className='ml-4'>Sign Out</Button>
+                <Button onClick={handleSignOut} variant='contained' className='ml-4 h-10'>Sign Out</Button>
             </div>
         </div>
     );
